@@ -1,0 +1,61 @@
+<div javelin-navbar>
+	<button class="btn navbar-btn btn-green pull-right" ng-click="openCreateGroupModal()"><i class="fa fa-plus"></i> Create Group</button>
+	<a href="/#/groups" class="navbar-link ng-fadeinoutleft" ng-show="state.current.name=='groups.detail'" style="padding-right: 10px"><span class="fa fa-arrow-left"></span> Back</a>
+	<ol class="breadcrumb">
+		<li ng-class="{active: (state.current.name=='groups')}">
+			<a href="/#/groups">Groups</a>
+		</li>
+		<li ng-if="state.current.name == 'groups.detail'" class="active">
+			{{ currentGroup.name }}
+		</li>
+	</ol>
+</div>
+
+<div class="javelin-main" ng-switch="state.current.name">
+	<!-- TABLE -->
+	<div ng-switch-when="groups" class="slide-inright-outleft">
+		<div class="row">
+			<div class="col-xs-12">
+				<div class="panel panel-default">
+					<div class="panel-body">
+						<div ng-jtable="groupsTable"></div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- DETAIL -->
+	<div ng-switch-when="groups.detail" class="slide-inleft-outright">
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				<button class="btn btn-red pull-right" ng-click="openDeleteGroupModal(currentGroup, $index)"><span class="fa fa-trash-o"></span> Delete Group</button>
+				<h3>{{ currentGroup.name }} <small>{{ currentGroup.description }}</small></h3>
+			</div>
+			<div class="panel-body">
+				<table class="table table-striped table-hover">
+					<thead>
+						<tr>
+							<th>Last Name</th>
+							<th>First Name</th>
+							<th>Actions</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr ng-if="currentGroup.members.length == 0">
+							<td colspan="3"><strong>No Data</strong></td>
+						</tr>
+						<tr ng-repeat="member in currentGroup.members">
+							<td>{{ member.last_name }}</td>
+							<td>{{ member.first_name }}</td>
+							<td>
+								<button class="btn btn-xs btn-red"><span class="fa fa-trash-o"></span></button>
+								<button class="btn btn-xs btn-teal" data-ui-sref="people.detail({ id: {{ member.id }} })"><span class="fa fa-eye"></span></button>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+</div>

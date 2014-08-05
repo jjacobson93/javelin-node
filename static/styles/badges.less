@@ -1,0 +1,45 @@
+@import "variables.less";
+
+.badge-variant(@background) {
+  background-color: @background;
+}
+
+.badge, .badge-default {
+  .badge-variant(@dark-lightgray-color);
+}
+
+.badge-teal {
+  .badge-variant(@teal-color);
+}
+
+.badge-green,
+.badge-success {
+  .badge-variant(@green-color);
+}
+
+.badge-blue,
+.badge-primary {
+  .badge-variant(@blue-color);
+}
+
+.badge-yellow,
+.badge-warning {
+  .badge-variant(@yellow-color);
+}
+
+.badge-orange {
+  .badge-variant(@orange-color);
+}
+
+.badge-red,
+.badge-danger {
+  .badge-variant(@red-color);
+}
+
+.badge-purple {
+  .badge-variant(@purple-color);
+}
+
+.badge-inverse {
+  .badge-variant(@black-color);
+}

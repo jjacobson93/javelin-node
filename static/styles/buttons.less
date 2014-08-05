@@ -1,0 +1,114 @@
+@import "variables.less";
+
+// Mixins
+
+.button-variant(@background) {
+  color: #FFF;
+  background-color: @background;
+  border: none;
+  // border-color: @border;
+
+  &:hover,
+  &:focus {
+    color: #FFF;
+    background-image: none;
+    background-color: mix(@background, white, 80%);
+        // border-color: darken(@border, 12%);
+  }
+  &:active,
+  &.active,
+  .open > .dropdown-toggle& {
+    background-image: none;
+    color: #FFF;
+    background-color: mix(@background, black, 85%);
+  }
+  &.disabled,
+  &[disabled],
+  fieldset[disabled] & {
+    &,
+    &:hover,
+    &:focus,
+    &:active,
+    &.active {
+      background-color: @background;
+          // border-color: @border;
+    }
+  }
+
+  .badge {
+    color: @background; 
+    background-color: #FFF;
+  }
+}
+
+.btn {
+  padding: 10px 16px;
+  font-size: 14px;
+  font-weight: 700;
+  outline: none !important;
+
+  text-transform: uppercase;
+
+  -webkit-transition: border .25s linear, color .25s linear, background-color .25s linear;
+  -moz-transition: border .25s linear, color .25s linear, background-color .25s linear;
+  -ms-transition: border .25s linear, color .25s linear, background-color .25s linear;
+  transition: border .25s linear, color .25s linear, background-color .25s linear;
+}
+
+// Alternate buttons
+// --------------------------------------------------
+
+.btn, .btn-default {
+  .button-variant(@dark-lightgray-color);
+}
+
+.btn-teal {
+  .button-variant(@teal-color);
+}
+
+.btn-green,
+.btn-success {
+  .button-variant(@green-color);
+}
+
+.btn-blue,
+.btn-primary {
+  .button-variant(@blue-color);
+}
+
+.btn-yellow,
+.btn-warning {
+  .button-variant(@yellow-color);
+}
+
+.btn-orange {
+  .button-variant(@orange-color);
+}
+
+.btn-red,
+.btn-danger {
+  .button-variant(@red-color);
+}
+
+.btn-purple {
+  .button-variant(@purple-color);
+}
+
+.btn-inverse {
+  .button-variant(@black-color);
+}
+
+// Button Sizes
+// --------------------------------------------------
+
+.btn-lg {
+  padding: 12px 18px;
+}
+.btn-sm {
+  padding: 8px 14px;
+}
+.btn-xs {
+  padding: 2px 6px;
+  font-size: 12px;
+  font-weight: 500;
+}

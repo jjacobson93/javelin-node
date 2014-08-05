@@ -1,0 +1,62 @@
+<style type="text/css">
+body {
+	background-color: #2C3E50;
+	padding-left: 0;
+	/*position: absolute;
+	width: 100%;
+	height: 100%;
+	margin: 0;*/
+}
+
+@media screen and (max-width: 620px) {
+	body {
+		padding-bottom: 300px;
+	}
+}
+
+footer {
+	background-color: #2C3E50;
+}
+
+header.navbar-javelin {
+	background-color: #2C3E50;	
+}
+
+.navbar-javelin-top,
+.navbar-javelin-top .navbar-brand,
+.navbar-javelin-top ul.navbar-nav.navbar-right {
+	background-color: #2C3E50;
+}
+
+.javelin-main {
+	padding: 0;
+}
+</style>
+
+<section class="login fade-in">
+	<div class="login-icon">
+		<img src="/static/images/javelin-icon-v2.svg">
+		<h4>Welcome to
+			<small>Javelin</small>
+		</h4>
+	</div>
+	<div class="login-form">
+		<form action="/login" method="post">
+			<div>
+				<div class="form-group">
+					<input class="form-control" id="auth_user_username" name="username" placeholder="E-mail" type="text">
+				</div>
+				<div class="form-group">
+					<input class="form-control" id="auth_user_password" name="password" placeholder="Password" type="password">
+				</div>
+				<div class="form-group">
+					<input class="btn btn-blue btn-lg btn-block" type="submit" value="Login">
+				</div>
+				<div>
+					<a href="/request_reset_password">Lost your password?</a>
+				</div>
+				<input type="hidden" name="_csrf" value="<%= _csrf %>">
+			</div>
+		</form>
+	</div>
+</section>

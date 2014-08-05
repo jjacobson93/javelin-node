@@ -1,0 +1,62 @@
+<div javelin-navbar>
+	<button class="btn navbar-btn btn-green pull-right" ng-click="openAddSubjectModal()"><span class="fa fa-plus"></span> Add Subject</button>
+	<h4 class="navbar-text">Tutoring</h4>
+</div>
+
+<div class="javelin-main">
+	<h3 ng-if="isLoading"><span class="fa fa-circle-o-notch fa-spin"></span> Loading data...</h3>
+	<div class="panel panel-tabbed fade-inout-downup" ng-if="!isLoading">
+		<h3 ng-if="!subjects || (subjects && subjects.length == 0)">No subjects. Press "Add Subject" to add one.</h3>
+		<tabset ng-if="subjects && subjects.length > 0">
+			<tab ng-repeat="subject in subjects" active="subject.activeTab" disabled="subject.disabledTab">
+				<tab-heading>
+					{{subject.title}}&nbsp;&nbsp;<span class="badge" ng-class="{'badge-blue': subject.activeTab}">{{ subject.attendees.length }}</span>
+				</tab-heading>
+				<div class="row">
+					<div class="col-md-6">
+						<div class="form-group">
+							<label>Check-in</label>
+							<div class="input-group">
+								<input class="form-control" placeholder="Check-in" ng-model="subject.checkInId">
+								<span class="input-group-btn">
+									<button class="btn btn-teal" ng-disabled="!subject.checkInId" ng-click="checkIn($index)">Check-in</button>
+								</span>
+							</div>
+						</div>
+					</div>
+					<div class="col-md-6">
+						<div class="form-group">
+							<label>Check-out</label>
+							<div class="input-group">
+								<input class="form-control" placeholder="Check-out" ng-model="subject.checkOutId">
+								<span class="input-group-btn">
+									<button class="btn btn-purple" ng-disabled="!subject.checkOutId" ng-click="checkOut($index)">Check-out</button>
+								</span>
+							</div>
+						</div>
+					</div>
+				</div>
+				<table class="table table-hover">
+					<thead>
+						<tr>
+							<th>Last Name</th>
+							<th>First Name</th>
+							<th>In</th>
+							<th>Out</th>
+							<th>Total Time</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr ng-repeat="attendance in subject.tutoringAttendances">
+							<td>{{ attendance.attendee.last_name }}</td>
+							<td>{{ attendance.attendee.first_name }}</td>
+							<td>{{ (attendance.in_time | moment:'LT') || '---' }}</td>
+							<td>{{ (attendance.out_time | moment:'LT') || '---' }}</td>
+							<td>{{ (attendance.out_time - attendance.in_time) || '---' }}</td>
+						</tr>
+					</tbody>
+				</table>
+			</tab>
+		</tabset>
+	</div>
+</div>

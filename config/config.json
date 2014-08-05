@@ -1,0 +1,23 @@
+{
+  "development": {
+    "username": "jjacobson",
+    "password": null,
+    "database": "javelin_dev",
+    "host": "127.0.0.1",
+    "dialect": "postgres"
+  },
+  "test": {
+    "username": "jjacobson",
+    "password": null,
+    "database": "javelin_test",
+    "host": "127.0.0.1",
+    "dialect": "postgres"
+  },
+  "production": {
+    "username": "jjacobson",
+    "password": null,
+    "database": "javelin_production",
+    "host": "127.0.0.1",
+    "dialect": "postgres"
+  }
+}

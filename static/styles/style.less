@@ -1,0 +1,193 @@
+@import "variables.less";
+
+/* Sticky footer styles
+-------------------------------------------------- */
+html {
+	// position: relative;
+	// min-height: 100%;
+	height: 100%;
+	// overflow: hidden;
+}
+
+footer {
+	position: absolute;
+	bottom: 0;
+	width: 100%;
+	/* Set the fixed height of the footer here */
+	height: 66px;
+	background-color: @black-color;
+	color: @light-blue-color;
+	padding: 20px 0;
+}
+
+body {
+	// margin: 0 0 66px 0;
+	// padding: 66px 0 70px;
+	// min-height: 100%;
+	height: 100%;
+	padding-top: 66px;
+	padding-left: 92px;
+	// padding-bottom: 12px;
+	// overflow-x: hidden;
+	background-color: @lightgray-color;
+	font-family: 'Lato', 'Open Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+	font-size: 15px;
+
+	-webkit-transition: padding-left 0.2s;
+	-moz-transition: padding-left 0.2s;
+	-o-transition: padding-left 0.2s;
+	transition: padding-left 0.2s;
+
+	@media (max-width: 767px) {
+		padding-left: 0;
+		padding-top: 132px;
+
+		&.side-open {
+			padding-left: 92px;
+		}
+	}
+}
+
+a {
+	cursor: pointer;
+	transition: 0.25s;
+}
+
+div[ui-view] {
+	height: 100%;
+}
+
+.javelin-main {
+	position: relative;
+	height: 100%;
+	// width: 100%;
+	padding-top: 76px;
+	padding-left: 15px;
+	padding-right: 15px;
+
+	@media (min-width: 768px) {
+		// padding: 0 8.5789%;
+		padding-left: 40px;
+		padding-right: 40px;
+	}
+
+	// @media (min-width: 992px) {
+	// 	// padding: 0 10.4716%;
+	// }
+
+	// @media (min-width: 1200px) {
+	// 	// padding: 0 10.666667%;
+	// }
+
+	& [ng-view] {
+		height: 100%;
+	}
+}
+
+.vertical-divider {
+	border-left: 1px solid @dark-lightgray-color;
+	height: 28px;
+	display: inline-block;
+	line-height: 22px; 
+}
+
+.sidebar {
+	position: fixed;
+	top: 132px;
+	bottom: 0;
+	left: 92px;
+	overflow-x: hidden;
+	overflow-y: auto;
+	background-color: lighten(@lightgray-color, 4%);
+
+	& > .nav-sidebar {
+		margin-left: -15px;
+		margin-right: -15px;
+
+		& > li > a {
+			padding-left: 20px;
+			padding-right: 20px;
+		}
+
+		& > .active > a,
+		& > .active > a:hover,
+		& > .active > a:focus {
+			color: #FFF;
+			background-color: @teal-color;
+		}
+	}
+}
+
+// *:not(.fa):not([class^="pe-7s-"]) {
+// 	font-family: 'Open Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+// }s
+
+/**** SEARCH ****/
+
+.row.search-row {
+	height: 100%;
+
+	@media (min-width: 768px) {
+		margin-left: -40px;
+		margin-right: -40px;
+		margin-top: -20px;
+	}
+
+	& [class^="col-"] {
+		// position: fixed;
+		// height: 100%;
+
+		&:first-child {
+			border-right: 2px solid @dark-lightgray-color;
+			top: 132px;
+			bottom: 0;
+			// left: 0;
+
+			position: fixed;
+			padding: 0;
+			// padding-bottom: 60px;
+			overflow-y: scroll;
+
+			@media (max-width: 767px) {
+				top: 198px;
+			}
+		}
+	}
+
+	& table tr > th {
+		background-color: @dark-lightgray-color;
+		text-transform: uppercase;
+	}
+
+	& table.search-results {
+		margin: 0;
+
+		& tr > td,
+		& tr > th {
+			padding: 8px 16px;
+		}
+
+		& > tbody > tr:nth-child(odd) > td {
+			background-color: white;
+		}
+
+		& > tbody > tr:hover > td {
+			cursor: pointer;
+			background-color: lighten(@blue-color, 35%);
+		}
+	}
+}
+
+
+/**** FOOTERS ****/
+
+footer ul {
+	padding: 0;
+	margin: 0;
+	list-style-type: none;
+	text-align: left;
+}
+
+footer ul > li {
+	display: inline;
+}
