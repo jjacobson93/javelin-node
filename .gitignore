@@ -28,3 +28,5 @@ static/bower_components
 
 # Users Environment Variables
 .lock-wscript
+sequelize_test.js
+testapp.js
