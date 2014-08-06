@@ -10,6 +10,8 @@ var	session = require('express-session'),
 module.exports = function(app) {
 	app.set('view engine', 'ejs');
 
+	app.enable('trust proxy');
+
 	app.use(bodyParser.urlencoded({
 		extended: true
 	}));
