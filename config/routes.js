@@ -79,8 +79,8 @@ module.exports = function(app) {
 	// orientation
 	app.get('/api/orientation/crews', requiresLogin, orientation.findCrews);
 	app.post('/api/orientation/crews', requiresLogin, orientation.createCrew);
-	app.put('/api/orientation/crews', requiresLogin, orientation.updateCrew);
-	app.delete('/api/orientation/crews', requiresLogin, orientation.deleteCrew);
+	app.put('/api/orientation/crews/:id', requiresLogin, orientation.updateCrew);
+	app.delete('/api/orientation/crews/:id', requiresLogin, orientation.deleteCrew);
 
 	app.get('/api/orientation/crews/:id', requiresLogin, orientation.findCrew);
 	app.post('/api/orientation/crews/:id/members', requiresLogin, orientation.addMembersToCrew);

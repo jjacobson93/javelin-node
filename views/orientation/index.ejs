@@ -45,7 +45,7 @@
 											(crew.score == 'A') ? '#96E5B8' :
 											((crew.score == 'I') ? '#F8E187' :
 											 (crew.score == 'M') ? '#EE8176' : initial) }">
-									<select ui-select2="{minimumResultsForSearch: -1}" ng-model="crew.score" style="width: 80px">
+									<select ui-select2="{minimumResultsForSearch: -1}" ng-model="crew.score" style="width: 80px" ng-change="updateCrewScore(crew)">
 										<option value="">N/A</option>
 										<option value="A">A</option>
 										<option value="I">I</option>

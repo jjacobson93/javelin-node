@@ -129,6 +129,16 @@ app.controller('OrientationController', ['$scope', '$state', '$modal', '$q', '$h
 			$scope.currentCrew.crewMembers.splice(idx, 1);
 		});
 	};
+
+	$scope.updateCrewScore = function(crew) {
+		$http.put('/api/orientation/crews/' + crew.id, {
+			score: crew.score
+		}).success(function(data) {
+
+		}).error(function(err) {
+			notify('error', 'There was an error updating crew score. Please refresh and try again.')
+		});
+	};
 }]);
 
 app.controller('CrewCreateController', [
