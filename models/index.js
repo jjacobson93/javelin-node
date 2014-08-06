@@ -2,7 +2,7 @@ var fs        = require('fs'),
 	path      = require('path'),
 	Sequelize = require('sequelize'),
 	lodash    = require('lodash'),
-	sequelize = new Sequelize('javelin', 'jjacobson', null, {
+	sequelize = new Sequelize('javelin', 'postgres', 'postmaster', {
 		dialect: 'postgres',
 		define: {
 			underscored: true
