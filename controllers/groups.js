@@ -93,3 +93,21 @@ exports.delete = function(req, res) {
 		res.json({ affectedRows: affectedRows });
 	});
 };
+
+exports.addMembersToGroup = function(req, res) {
+	var group_id = req.param('id');
+
+	db.group_member.bulkCreate(_.map(req.body.people, function(person_id) {
+		return {
+			group_id: group_id,
+			person_id: person_id
+		}
+	}), {
+		transaction: req.t,
+		returning: true
+	}).success(function(group_members) {
+		res.status(201).json(group_members);
+	}).error(function(err) {
+		res.status(400).json({ message: err });
+	});
+}

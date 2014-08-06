@@ -3,27 +3,20 @@ module.exports = function(sequelize, DataTypes) {
 	var Group = sequelize.define('group', {
 		name: {
 			type: DataTypes.STRING,
-			allowNull: false,
-			validate: {
-				notNull: true
-			}
+			allowNull: false
 		},
 		description: DataTypes.TEXT,
 		permission: {
 			type: DataTypes.ENUM('user', 'admin', 'teachers', 'all'),
 			allowNull: false,
 			validate: {
-				notNull: true,
 				isIn: [['user', 'admin', 'teachers', 'all']]
 			}
 		},
 		is_smart: {
 			type: DataTypes.BOOLEAN,
 			defaultValue: false,
-			allowNull: false,
-			validate: {
-				notNull: true
-			}
+			allowNull: false
 		},
 		criteria: {
 			type: DataTypes.TEXT
@@ -31,7 +24,7 @@ module.exports = function(sequelize, DataTypes) {
 	}, {
 		classMethods: {
 			associate: function(models) {
-				Group.hasMany(models.person, { as: 'members', foreignKey: "group_id", through: 'group_members' });
+				Group.hasMany(models.person, { as: 'members', foreignKey: "group_id", through: models.group_member });
 			}
 		}
 	});

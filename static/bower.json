@@ -31,7 +31,8 @@
     "angular-animate": "~1.2.20",
     "animate.css": "~3.2.0",
     "angular-scroll": "~0.6.1",
-    "moment": "~2.8.1"
+    "moment": "~2.8.1",
+    "eonasdan-bootstrap-datetimepicker": "https://github.com/Eonasdan/bootstrap-datetimepicker.git#~3.0.2"
   },
   "resolutions": {
     "angular": "1.2.20",

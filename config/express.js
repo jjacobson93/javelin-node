@@ -4,16 +4,23 @@ var	session = require('express-session'),
 	csrf = require('csurf'),
 	flash = require('connect-flash'),
 	RedisStore = require('connect-redis')(session),
-	uuid = require('node-uuid');
+	uuid = require('node-uuid'),
+	multipart = require('connect-multiparty');
 
 module.exports = function(app) {
 	app.set('view engine', 'ejs');
+
+	app.use(bodyParser.urlencoded({
+		extended: true
+	}));
+	app.use(bodyParser.json());
+
 	app.use(session({
 		secret: 'this is one super awesome secret',
 		resave: false,
 		saveUninitialized: false,
 		cookie: {
-			maxAge: 4*60*60*1000, // 4 hours
+			maxAge: 2*60*60*1000, // 2 hours
 			expires: false
 		},
 		genid: function() {
@@ -26,10 +33,11 @@ module.exports = function(app) {
 		})
 	}));
 	app.use(cookieParser());
-	app.use(bodyParser.urlencoded({
-		extended: true
+
+	// Multipart forms
+	app.use(multipart({
+		uploadDir: __dirname + '/../uploads'
 	}));
-	app.use(bodyParser.json());
 
 	// CSRF
 	app.use(csrf());

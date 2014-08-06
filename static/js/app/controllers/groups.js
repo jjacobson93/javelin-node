@@ -1,21 +1,31 @@
 app.controller('GroupsController', ['$scope', '$state', '$modal', '$q', '$http', 'GroupService', function($scope, $state, $modal, $q, $http, GroupService) {
 	$scope.state = $state;
 	$scope.groups = [];
+	$scope.groupMembers = {};
 	$scope.currentGroup = undefined;
 
-	var getGroup = function(id) {
-		$http.get('/api/groups/' + id, {
-			params: { members: true }
-		}).success(function(data) {
-			$scope.currentGroup = data;
-			$state.go('groups.detail', { id: data.id });
-		}).error(function(err) {
-			notify('error', 'Could not get group. Refresh and try again.');
-		});
+	$scope.getGroup = function(id) {
+		if (id) {
+			$http.get('/api/groups/' + id, {
+				params: { members: true }
+			}).success(function(data) {
+				if (data && data != "null") {
+					$scope.currentGroup = data;
+					$state.go('groups.detail', { id: data.id });
+				} else {
+					$state.go('groups');
+				}
+			}).error(function(err) {
+				$state.go('groups');
+				notify('error', 'Could not get group. Refresh and try again.');
+			});
+		} else {
+			$state.go('groups');
+		}
 	}
 
 	if ($state.current.name == 'groups.detail') {
-		getGroup($state.params.id);
+		$scope.getGroup($state.params.id);
 	}
 
 	$scope.groupsTable = {
@@ -38,17 +48,68 @@ app.controller('GroupsController', ['$scope', '$state', '$modal', '$q', '$http',
 		},
 		searchInput: $scope.$parent.searchInput,
 		rowClick: function(row) {
-			getGroup(row.id);
+			$scope.getGroup(row.id);
 		},
 		reload: false
 	};
 
-	// $scope.isLoading = true;
+	$scope.addPersonDropdown = {
+		placeholder: 'Search for people',
+		multiple: true,
+		allowClear: true,
+		id: function(person){
+			return person.id;
+		},
+		ajax: {
+			url: '/api/people',
+			dataType: 'json',
+			data: function(term, page){
+				return {
+					search: term,
+					// offset: (page - 1)*20,
+					// limit: 20
+				};
+			},
+			results: function(data, page) {
+				return {
+					results: data.sort(function(a,b) {
+						if (a.last_name < b.last_name) {
+							return -1;
+						} else if (a.last_name > b.last_name) {
+							return 1;
+						} else if (a.first_name > b.first_name) {
+							return -1;
+						} else if (a.first_name < b.first_name) {
+							return 1;
+						} else {
+							return 0;
+						}
+					})
+				};
+			}
+		},
+		formatResult: function(person) {
+			return person.last_name + ', ' + person.first_name;
+		},
+		formatSelection: function(person) {
+			return person.last_name + ', ' + person.first_name;
+		}
+	}
 
-	// $http.get('/api/groups', { params: { 'members': true } }).success(function(data) {
-	// 	$scope.groups = data;
-	// 	$scope.isLoading = false;
-	// });
+	$scope.addPeopleToGroup = function(groupId) {
+		$http.post('/api/groups/' + groupId + '/members', {
+			people: $scope.groupMembers.peopleToAdd.map(function(p) {
+				return p.id;
+			})
+		}).success(function(people) {
+			$scope.groupMembers.peopleToAdd = [];
+			$scope.getGroup(groupId);
+			notify('success', 'Added people to ' + $scope.currentGroup.name);
+		}).error(function(err) {
+			console.error(err);
+			notify('error', 'There was an error adding people');
+		});
+	};
 
 	$scope.openCreateGroupModal = function() {
 		var modalInstance = $modal.open({
@@ -90,8 +151,11 @@ app.controller('GroupsController', ['$scope', '$state', '$modal', '$q', '$http',
 		});
 
 		modalInstance.result.then(function() {
-			$scope.groupsTable.data.splice(idx, 1);
-			$scope.groupsTable.reload = true;
+			$state.go('groups');
+			if ($scope.groupsTable && $scope.groupsTable.data) {
+				$scope.groupsTable.data.splice(idx, 1);
+				$scope.groupsTable.reload = true;
+			}
 		});
 	};
 
@@ -101,7 +165,7 @@ app.controller('GroupCreateController', [
 	'$scope', '$http', '$modalInstance', 'GroupService', 
 	function($scope, $http, $modalInstance, GroupService) {
 		$scope.group = {};
-		$scope.group.is_smart = true;
+		$scope.group.is_smart = false;
 		$scope.group.permission = "user";
 
 		var year = new Date().getFullYear();

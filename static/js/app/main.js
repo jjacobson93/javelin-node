@@ -52,6 +52,9 @@ app.config(['$stateProvider', '$urlRouterProvider',
 				templateUrl: '/views/events',
 				controller: 'EventsController'
 			})
+				.state('events.attendance', {
+					url: '/:id',
+				})
 
 			.state('orientation', {
 				url: '/orientation',
@@ -62,11 +65,11 @@ app.config(['$stateProvider', '$urlRouterProvider',
 					url: '/:id',
 				})
 
-			.state('tutoring', {
-				url: '/tutoring',
-				templateUrl: '/views/tutoring',
-				controller: 'TutoringController'
-			})
+			// .state('tutoring', {
+			// 	url: '/tutoring',
+			// 	templateUrl: '/views/tutoring',
+			// 	controller: 'TutoringController'
+			// })
 
 			.state('admin', {
 				url: '/admin',

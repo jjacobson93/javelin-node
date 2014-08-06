@@ -2,11 +2,19 @@ app.controller('OrientationController', ['$scope', '$state', '$modal', '$q', '$h
 	$scope.state = $state;
 	$scope.crews = [];
 	$scope.currentCrew = undefined;
+	$scope.orientation = {};
+	$scope.orientation.peopleToAdd = [];
+	$scope.test = undefined;
 
 	$scope.getCrew = function(id) {
 		$http.get('/api/orientation/crews/' + id).success(function(data) {
-			$scope.currentCrew = data;
-			$state.go('orientation.crew', { id: data.id });
+			if (data != "null") {
+				$scope.currentCrew = data;
+				if ($state.current.name != 'orientation.crew')
+					$state.go('orientation.crew', { id: data.id });
+			} else {
+				$state.go('orientation');
+			}
 		}).error(function(err) {
 			notify('error', 'Could not get group. Refresh and try again.');
 		});
@@ -22,41 +30,103 @@ app.controller('OrientationController', ['$scope', '$state', '$modal', '$q', '$h
 		notify('error', 'There was an error getting crews. Please refresh.');
 	});
 
-	// $scope.crewTable = {
-	// 	columns: [
-	// 		{ 
-	// 			'key': 'id',
-	// 			'label': 'Crew #',
-	// 		},
-	// 		{ 
-	// 			'key': 'room',
-	// 			'label': 'Room',
-	// 		}
-	// 	],
-	// 	title: 'Crews',
-	// 	getData: {
-	// 		url: '/api/orientation/crews'
-	// 	},
-	// 	classes: 'table table-hover',
-	// 	scope: {
-	// 	},
-	// 	searchInput: $scope.$parent.searchInput,
-	// 	rowClick: function(row) {
-	// 		getCrew(row.id);
-	// 	},
-	// 	reload: false
-	// };
+	$scope.addPersonDropdown = {
+		placeholder: 'Search for people',
+		multiple: true,
+		allowClear: true,
+		id: function(person){
+			return person.id;
+		},
+		ajax: {
+			url: '/api/people',
+			dataType: 'json',
+			data: function(term, page){
+				return {
+					search: term,
+					// offset: (page - 1)*20,
+					// limit: 20
+				};
+			},
+			results: function(data, page) {
+				return {
+					results: data.sort(function(a,b) {
+						if (a.last_name < b.last_name) {
+							return -1;
+						} else if (a.last_name > b.last_name) {
+							return 1;
+						} else if (a.first_name > b.first_name) {
+							return -1;
+						} else if (a.first_name < b.first_name) {
+							return 1;
+						} else {
+							return 0;
+						}
+					})
+				};
+			}
+		},
+		formatResult: function(person) {
+			return person.last_name + ', ' + person.first_name;
+		},
+		formatSelection: function(person) {
+			return person.last_name + ', ' + person.first_name;
+		}
+	}
+
+	$scope.addPeopleToCrew = function(crewId) {
+		$http.post('/api/orientation/crews/' + crewId + '/members', {
+			people: $scope.orientation.peopleToAdd.map(function(p) {
+				return p.id;
+			})
+		}).success(function(people) {
+			$scope.orientation.peopleToAdd = [];
+			$scope.getCrew(crewId);
+			notify('success', 'Added people to Crew #' + crewId);
+		}).error(function(err) {
+			console.error(err);
+			notify('error', 'There was an error adding people');
+		});
+	};
 
 	$scope.openCreateCrewModal = function() {
 		var modalInstance = $modal.open({
 			templateUrl: '/views/orientation/create_crew',
 			controller: 'CrewCreateController',
-			size: 'lg',
 			resolve: {}
 		});
 
 		modalInstance.result.then(function(newCrew) {
 			$scope.crews.push(newCrew);
+		});
+	};
+
+	$scope.openRemoveFromCrewModal = function(crew, person, idx) {
+		var modalInstance = $modal.open({
+			templateUrl: '/views/orientation/remove_from_crew',
+			controller: ['$scope', '$modalInstance', function($scope, $modalInstance) {
+				$scope.crew = crew;
+				$scope.person = person;
+
+				$scope.removeFromCrew = function() {
+					$http.delete('/api/orientation/crews/' + crew.id + '/members/' + person.id).success(function(data) {
+						notify('success', "'" + person.first_name + ' ' + person.last_name + "' has been deleted.");
+
+						$modalInstance.close(data);
+					}).error(function(err) {
+						notify('error', "There was an error deleting '" + person.first_name + ' ' + person.last_name + "'. Please try again.");
+						$modalInstance.dismiss(err);
+					});
+				};
+
+				$scope.cancel = function() {
+					$modalInstance.dismiss('cancel');
+				};
+			}],
+			size: 'sm'
+		});
+
+		modalInstance.result.then(function() {
+			$scope.currentCrew.crewMembers.splice(idx, 1);
 		});
 	};
 }]);

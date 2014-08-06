@@ -2,13 +2,14 @@ var fs        = require('fs'),
 	path      = require('path'),
 	Sequelize = require('sequelize'),
 	lodash    = require('lodash'),
-	sequelize = new Sequelize('javelinnode', 'jjacobson', null, {
+	sequelize = new Sequelize('javelin', 'postgres', null, {
 		dialect: 'postgres',
 		define: {
 			underscored: true
 		},
 		pool: {
-			maxConnections: 40
+			maxConnections: 40,
+			maxIdleTime: 30
 		}
 	}),
 	db        = {};

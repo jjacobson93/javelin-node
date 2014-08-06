@@ -284,3 +284,14 @@
         -moz-border-radius-topright: 0;
             border-top-right-radius: 0;
 }
+
+.input-group .select2-container:first-child .select2-choice,
+.input-group .select2-container:first-child .select2-choices {
+    z-index: 2;
+    -webkit-border-top-right-radius: 0;
+        -moz-border-radius-topright: 0;
+            border-top-right-radius: 0;
+    -webkit-border-bottom-right-radius: 0;
+        -moz-border-radius-bottomright: 0;
+            border-bottom-right-radius: 0;
+}

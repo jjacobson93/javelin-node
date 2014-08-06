@@ -12,10 +12,6 @@
 			<input type="text" class="form-control" placeholder="A short description" ng-model="group.description">
 		</div>
 		<div class="form-group">
-			<label>SMART Group</label>
-			<input toggle-switch model="group.is_smart">
-		</div>
-		<div class="form-group">
 			<label>Permissions</label>
 			<label>
 				<input type="radio" name="permissions-radio" ng-model="group.permission" value="user"> Only You
@@ -30,9 +26,12 @@
 				<input type="radio" name="permissions-radio" ng-model="group.permission" value="all"> All
 			</label>
 		</div>
-
+		<div class="form-group">
+			<label>SMART Group</label>
+			<input toggle-switch model="group.is_smart">
+		</div>
 		<div ng-show="group.is_smart" class="filters form-group">
-			<p class="thin">Criteria</p>
+			<label>Criteria</label>
 
 			<!-- CRITERIA -->
 
@@ -141,7 +140,7 @@
 		<div class="row">
 			<div class="col-xs-12">
 				<div class="form-group">
-					<p class="thin">Add People</p>
+					<label>Add People</label>
 					<input type="hidden" ui-select2="addPeopleSelectOptions" ng-model="group.people" multiple style="width:100%">
 				</div>
 			</div>

@@ -1,25 +1,9 @@
 
 module.exports = function(sequelize, DataTypes) {
-	var Attendeee = sequelize.define('attendee', {
-		attend_time: {
-			type: DataTypes.DATE,
-			defaultValue: sequelize.NOW,
-			allowNull: false,
-			validate: {
-				notNull: true,
-				isDate: true
-			}
-		}
-	});
-
 	var Event = sequelize.define('event', {
 		title: {
 			type: DataTypes.STRING,
-			allowNull: false,
-			validate: {
-				notNull: true,
-				isAlpha: true
-			}
+			allowNull: false
 		},
 		notes: DataTypes.TEXT,
 		location: DataTypes.TEXT,
@@ -27,7 +11,6 @@ module.exports = function(sequelize, DataTypes) {
 			type: DataTypes.DATE,
 			allowNull: false,
 			validate: {
-				notNull: true,
 				isDate: true
 			}
 		},
@@ -35,7 +18,6 @@ module.exports = function(sequelize, DataTypes) {
 			type: DataTypes.DATE,
 			allowNull: false,
 			validate: {
-				notNull: true,
 				isDate: true
 			}
 		},
@@ -49,6 +31,8 @@ module.exports = function(sequelize, DataTypes) {
 		},
 		end_recurring: {
 			type: DataTypes.DATE,
+			defaultValue: null,
+			allowNull: true,
 			validate: {
 				isDate: true
 			}
@@ -56,8 +40,7 @@ module.exports = function(sequelize, DataTypes) {
 	}, {
 		classMethods: {
 			associate: function(models) {
-				Event.hasMany(models.person, { as: 'attendees', foreignKey: "event_id", through: Attendeee });
-				models.person.hasMany(Event, { foreignKey: "person_id", through: Attendeee });
+				Event.hasMany(models.person, { as: "attendees", foreignKey: "event_id", through: models.attendee });
 			}
 		}
 	});

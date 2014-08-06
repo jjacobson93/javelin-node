@@ -1,0 +1,9 @@
+<div class="remove-from-crew-modal">
+	<div class="modal-body">
+		<p class="lead">Are you sure you want to remove '{{ person.first_name + " " + person.last_name }}' from Crew #{{ crew.id }}?<p>
+	</div>
+	<div class="modal-footer">
+		<button class="btn" ng-click="cancel()">Cancel</button>
+		<button class="btn btn-red" ng-click="removeFromCrew()">Remove</button>
+	</div>
+</div>

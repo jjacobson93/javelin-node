@@ -3,17 +3,11 @@ module.exports = function(sequelize, DataTypes) {
 	var Course = sequelize.define('course', {
 		name: {
 			type: DataTypes.STRING,
-			allowNull: false,
-			validate: {
-				notNull: true
-			}
+			allowNull: false
 		},
 		code: {
 			type: DataTypes.STRING,
-			allowNull: false,
-			validate: {
-				notNull: true
-			}
+			allowNull: false
 		}
 	}, {
 		classMethods: {

@@ -22,6 +22,11 @@ module.exports = function(app) {
 		failureFlash: true
 	}));
 
+	app.get('/logout', function(req, res) {
+		req.logout();
+		res.redirect('/');
+	});
+
 	////////////////////////////////////////
 	//			  CONTROLLERS 			  //
 	////////////////////////////////////////
@@ -41,13 +46,24 @@ module.exports = function(app) {
 	// groups
 	app.get('/api/groups', requiresLogin, groups.findAll);
 	app.get('/api/groups/:id', requiresLogin, groups.findOne);
+	app.post('/api/groups/:id/members', requiresLogin, groups.addMembersToGroup);
+	// app.delete('/api/groups/:id/members/:person_id', requiresLogin, orientation.removeMemberFromGroup);
 
 	app.post('/api/groups', requiresLogin, groups.create);
 	app.put('/api/groups/:id', requiresLogin, groups.update);
 	app.delete('/api/groups/:id', requiresLogin, groups.delete);
 
 	// events
-	// app.get('/api/events')
+	app.get('/api/events', requiresLogin, events.findAll);
+	app.get('/api/events/:id', requiresLogin, events.findOne);
+
+	app.post('/api/events', requiresLogin, events.create);
+	app.put('/api/events/:id', requiresLogin, events.update);
+	app.delete('/api/events/:id', requiresLogin, events.delete);
+
+	app.get('/api/events/:id/attendance', requiresLogin, events.findAttendeesForEvent);
+	app.post('/api/events/:id/attendance', requiresLogin, events.addAttendeesToEvent);
+	// app.put('/api/events/:id/attendance', requiresLogin, events.setAttendanceForPeople);
 
 	// departments
 	app.get('/api/departments', requiresLogin, departments.findAll);
@@ -62,10 +78,15 @@ module.exports = function(app) {
 
 	// orientation
 	app.get('/api/orientation/crews', requiresLogin, orientation.findCrews);
-	app.get('/api/orientation/crews/:id', requiresLogin, orientation.findCrew);
 	app.post('/api/orientation/crews', requiresLogin, orientation.createCrew);
 	app.put('/api/orientation/crews', requiresLogin, orientation.updateCrew);
 	app.delete('/api/orientation/crews', requiresLogin, orientation.deleteCrew);
+
+	app.get('/api/orientation/crews/:id', requiresLogin, orientation.findCrew);
+	app.post('/api/orientation/crews/:id/members', requiresLogin, orientation.addMembersToCrew);
+	app.delete('/api/orientation/crews/:id/members/:person_id', requiresLogin, orientation.removeMemberFromCrew);
+
+	app.post('/api/orientation/import-leaders', requiresLogin, orientation.importCrewLeaders);
 
 	// app.get('/api/tutoring/attendance', requiresLogin, tutoring.findAttendance);
 

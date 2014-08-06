@@ -323,16 +323,19 @@ app.directive('ajaxForm', ['$http', function($http) {
 			}
 
 			$scope.submitForm = function(e) {
+				console.log("SUBMITTING FORM");
 				e.preventDefault();
-				$http.post(url, $elem.serialize(), {
-					headers : { 'Content-Type': 'application/x-www-form-urlencoded' }
-				}).success(function(data) {
-					console.log("SUCCESS");
-					console.log(data);
-				}).error(function(data) {
-					console.log("ERROR");
-					console.log(data);
-				});
+				// $http.post(url, $elem.serialize(), {
+				// 	headers : {
+				// 		'Content-Type': attrs.enctype || 'application/x-www-form-urlencoded'
+				// 	}
+				// }).success(function(data) {
+				// 	console.log("SUCCESS");
+				// 	console.log(data);
+				// }).error(function(data) {
+				// 	console.log("ERROR");
+				// 	console.log(data);
+				// });
 			};
 
 			attrs.$set('ng-submit', 'submitForm($event)');
@@ -457,3 +460,37 @@ app.directive('scrollSpy', ['$window', function ($window) {
 // 		}
 // 	}
 // }]);
+
+app.directive('datetimepicker', [function() {
+	return {
+		restrict: 'A',
+		scope: {
+			ngModel: '=',
+			maxDate: '=?',
+			minDate: '=?'
+		},
+		link: function($scope, $elem, attrs) {
+			var options = $scope.$eval(attrs.datetimepicker) || {};
+
+			$elem.datetimepicker(options);
+
+			$elem.on('dp.change', function(e) {
+				$scope.$apply(function() {
+					$scope.ngModel = e.date;
+				});
+			});
+
+			$scope.$watch('maxDate', function(newVal, oldVal) {
+				if (newVal !== oldVal) {
+					$elem.data('DateTimePicker').setMaxDate(newVal);
+				}
+			});
+
+			$scope.$watch('minDate', function(newVal, oldVal) {
+				if (newVal !== oldVal) {
+					$elem.data('DateTimePicker').setMinDate(newVal);
+				}
+			});
+		}
+	}
+}]);

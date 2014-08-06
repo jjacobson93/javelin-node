@@ -1,5 +1,7 @@
 <div javelin-navbar>
-	<button class="btn navbar-btn btn-green pull-right" ng-click="openCreateCrewModal()"><i class="fa fa-plus"></i> Create Crew</button>
+	<button class="btn navbar-btn btn-green pull-right ng-fadeinoutleft" ng-click="openCreateCrewModal()" ng-show="state.current.name=='orientation'">
+		<i class="fa fa-plus"></i> Create Crew
+	</button>
 	<a href="/#/orientation" class="navbar-link ng-fadeinoutleft" ng-show="state.current.name=='orientation.crew'" style="padding-right: 10px"><span class="fa fa-arrow-left"></span> Back</a>
 	<ol class="breadcrumb">
 		<li ng-class="{active: (state.current.name=='orientation')}">
@@ -21,23 +23,38 @@
 							<tr>
 								<th>Crew #</th>
 								<th>Room</th>
+								<th>Score</th>
 							</tr>
 						</thead>
 						<tbody>
 							<tr ng-if="!crews || crews.length == 0">
-								<td colspan="2" style="text-align:center">
+								<td colspan="3" style="text-align:center">
 									<strong>No crews. Click "Create Crew" to create one.</strong>
 								</td>
 							</tr>
 							<tr ng-repeat="crew in crews" ng-click="getCrew(crew.id)">
-								<td>{{ crew.id }}</td>
-								<td>{{ crew.room }}</td>
+								<td ng-style="{ 'background-color':
+											(crew.score == 'A') ? '#96E5B8' :
+											((crew.score == 'I') ? '#F8E187' :
+											 (crew.score == 'M') ? '#EE8176' : initial) }">{{ crew.id }}</td>
+								<td ng-style="{ 'background-color':
+											(crew.score == 'A') ? '#96E5B8' :
+											((crew.score == 'I') ? '#F8E187' :
+											 (crew.score == 'M') ? '#EE8176' : initial) }">{{ crew.room }}</td>
+								<td ng-style="{ 'background-color':
+											(crew.score == 'A') ? '#96E5B8' :
+											((crew.score == 'I') ? '#F8E187' :
+											 (crew.score == 'M') ? '#EE8176' : initial) }">
+									<select ui-select2="{minimumResultsForSearch: -1}" ng-model="crew.score" style="width: 80px">
+										<option value="">N/A</option>
+										<option value="A">A</option>
+										<option value="I">I</option>
+										<option value="M">M</option>
+									</select>
+								</td>
 							</tr>
 						</tbody>
 					</table>
-				</tab>
-				<tab heading="Scores">
-
 				</tab>
 			</tabset>
 		</div>
@@ -45,8 +62,19 @@
 	<div ng-switch-when="orientation.crew" class="slide-inleft-outright">
 		<div class="panel panel-default">
 			<div class="panel-heading">
-				<!-- <button class="btn btn-red pull-right" ng-click="openDeleteGroupModal(currentCrew, $index)"><span class="fa fa-trash-o"></span> Delete Group</button> -->
-				<h3>Crew #{{ currentCrew.id }} <small>{{ currentCrew.room }}</small></h3>
+				<div class="row">
+					<div class="col-md-6">
+						<h3>Crew #{{ currentCrew.id }} <small>{{ currentCrew.room }}</small></h3>
+					</div>
+					<div class="col-md-6">
+						<div class="input-group">
+							<input type="hidden" ui-select2="addPersonDropdown" ng-model="orientation.peopleToAdd" style="width:100%">
+							<span class="input-group-btn">
+								<button class="btn btn-green" ng-disabled="orientation.peopleToAdd.length == 0" ng-click="addPeopleToCrew(currentCrew.id)">Add People</button>
+							</span>
+						</div>
+					</div>
+				</div>
 			</div>
 			<div class="panel-body">
 				<table class="table table-hover">
@@ -58,6 +86,11 @@
 						</tr>
 					</thead>
 					<tbody>
+						<tr ng-if="!currentCrew.crewMembers || currentCrew.crewMembers.length == 0">
+							<td colspan="3" style="text-align:center">
+								<strong>No crew members. Type in names above and click "Add People" to add them.</strong>
+							</td>
+						</tr>
 						<tr ng-repeat="member in currentCrew.crewMembers">
 							<td>{{ member.last_name }}</td>
 							<td>{{ member.first_name }}</td>
@@ -65,11 +98,11 @@
 								<button class="btn btn-xs btn-blue">
 									<span class="fa fa-sign-out"></span> Move
 								</button>
-								<button class="btn btn-xs btn-teal" data-ui-sref="people.detail({ id: {{ member.id }} })">
+								<button class="btn btn-xs btn-teal" ui-sref="people.detail({ id: {{ member.id }} })">
 									<span class="fa fa-eye"></span> View
 								</button>
-								<button class="btn btn-xs btn-red">
-									<span class="fa fa-trash-o"></span> Delete
+								<button class="btn btn-xs btn-red" ng-click="openRemoveFromCrewModal(currentCrew, member, $index)">
+									<span class="fa fa-trash-o"></span> Remove
 								</button>
 							</td>
 						</tr>

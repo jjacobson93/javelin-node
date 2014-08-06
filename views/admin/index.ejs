@@ -3,4 +3,18 @@
 </div>
 
 <div class="javelin-main">
+	<div class="panel panel-default panel-tabbed">
+		<tabset>
+			<tab heading="Import">
+				<form id="import-leaders" ng-submit="submitImportLeaders()">
+					<div class="form-group">
+						<label>Crew Leaders</label>
+						<input type="file" name="csvFile" onchange="angular.element(this).scope().fileUpload.change(this.files)">
+					</div>
+					<input type="submit" class="btn btn-warning" value="Import Leaders">
+					<input type="hidden" name="_csrf" value="<%= _csrf %>">
+				</form>
+			</tab>
+		</tabset>
+	</div>
 </div>

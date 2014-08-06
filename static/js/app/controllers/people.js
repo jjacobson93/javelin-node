@@ -21,14 +21,14 @@ app.controller('PeopleController', ['$scope', '$http', '$location', '$state', '$
 
 	$scope.personTable = {
 		columns: [
-			{
-				'key': 'id',
-				'label': 'ID'
-			},
-			{
-				'key': 'student_id',
-				'label': 'Student ID'
-			},
+			// {
+			// 	'key': 'id',
+			// 	'label': 'ID'
+			// },
+			// {
+			// 	'key': 'student_id',
+			// 	'label': 'Student ID'
+			// },
 			{ 
 				'key': 'last_name',
 				'label': 'Last Name',
@@ -38,8 +38,8 @@ app.controller('PeopleController', ['$scope', '$http', '$location', '$state', '$
 				'label': 'First Name',
 			},
 			{
-				'key': 'grade',
-				'label': 'Grade'
+				'key': 'grad_year',
+				'label': 'Grad Year'
 			}
 		],
 		title: 'People',

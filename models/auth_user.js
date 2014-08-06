@@ -34,16 +34,12 @@ module.exports = function(sequelize, DataTypes) {
 			type: DataTypes.STRING,
 			allowNull: false,
 			validate: {
-				isEmail: true,
-				notNull: true
+				isEmail: true
 			}
 		},
 		password: {
 			type: DataTypes.STRING,
 			allowNull: false,
-			validate: {
-				notNull: true
-			},
 			set: function(password) {
 				var salt = bcrypt.genSaltSync(13);
 				var hash = bcrypt.hashSync(password, salt);

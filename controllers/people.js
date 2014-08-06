@@ -18,8 +18,8 @@ exports.findAll = function(req, res) {
 		}
 	} else {
 		query.where = db.Sequelize.or(
-			{ last_name: { like: '%' + req.query.search + '%' } },
-			{ first_name: { like: '%' + req.query.search + '%' } }
+			["last_name ILIKE ?", '%' + req.query.search + '%'],
+			["first_name ILIKE ?", '%' + req.query.search + '%']
 		);
 	}
 

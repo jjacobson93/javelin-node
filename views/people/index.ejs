@@ -1,6 +1,6 @@
 <div javelin-navbar>
 	<a href="/#/people" class="navbar-link ng-fadeinoutleft" ng-show="state.current.name=='people.detail'" style="padding-right: 10px"><span class="fa fa-arrow-left"></span> Back</a>
-	<ol class="breadcrumb">
+	<ol class="breadcrumb collapse">
 		<li ng-class="{active: (state.current.name=='people')}">
 			<a href="/#/people">People</a>
 		</li>
@@ -8,13 +8,6 @@
 			{{ currentPerson.first_name + ' ' + currentPerson.last_name }}
 		</li>
 	</ol>
-
-	<!-- <h4 class="navbar-text">
-		<a href="/#/people">People</a>
-	</h4>
-	<h4 class="navbar-text" ng-if="state.current.name == 'people.detail'">
-		&nbsp;/&nbsp;
-	</h4> -->
 </div>
 
 <div class="javelin-main" ng-switch="state.current.name">

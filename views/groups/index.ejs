@@ -29,8 +29,20 @@
 	<div ng-switch-when="groups.detail" class="slide-inleft-outright">
 		<div class="panel panel-default">
 			<div class="panel-heading">
-				<button class="btn btn-red pull-right" ng-click="openDeleteGroupModal(currentGroup, $index)"><span class="fa fa-trash-o"></span> Delete Group</button>
-				<h3>{{ currentGroup.name }} <small>{{ currentGroup.description }}</small></h3>
+				<div class="row">
+					<div class="col-md-6">
+						<h3 style="display:inline-block">{{ currentGroup.name }} <small>{{ currentGroup.description }}</small></h3>
+						<button class="btn btn-red" ng-click="openDeleteGroupModal(currentGroup, $index)" style="display: inline-block"><span class="fa fa-trash-o"></span> Delete Group</button>
+					</div>
+					<div class="col-md-6">
+						<div class="input-group">
+							<input type="hidden" ui-select2="addPersonDropdown" ng-model="groupMembers.peopleToAdd" style="width:100%; display: inline-block">
+							<span class="input-group-btn">
+								<button class="btn btn-green" ng-disabled="groupMembers.peopleToAdd.length == 0" ng-click="addPeopleToGroup(currentGroup.id)">Add People</button>
+							</span>
+						</div>
+					</div>
+				</div>
 			</div>
 			<div class="panel-body">
 				<table class="table table-striped table-hover">
@@ -43,13 +55,13 @@
 					</thead>
 					<tbody>
 						<tr ng-if="currentGroup.members.length == 0">
-							<td colspan="3"><strong>No Data</strong></td>
+							<td colspan="3" style="text-align:center"><strong>No group members. Search for people to add them!</strong></td>
 						</tr>
 						<tr ng-repeat="member in currentGroup.members">
 							<td>{{ member.last_name }}</td>
 							<td>{{ member.first_name }}</td>
 							<td>
-								<button class="btn btn-xs btn-red"><span class="fa fa-trash-o"></span></button>
+								<!-- <button class="btn btn-xs btn-red"><span class="fa fa-trash-o"></span></button> -->
 								<button class="btn btn-xs btn-teal" data-ui-sref="people.detail({ id: {{ member.id }} })"><span class="fa fa-eye"></span></button>
 							</td>
 						</tr>
