@@ -2,17 +2,27 @@ var fs        = require('fs'),
 	path      = require('path'),
 	Sequelize = require('sequelize'),
 	lodash    = require('lodash'),
-	sequelize = new Sequelize('javelin', 'postgres', 'postmaster', {
-		dialect: 'postgres',
-		define: {
-			underscored: true
-		},
-		pool: {
-			maxConnections: 40,
-			maxIdleTime: 30
-		}
-	}),
-	db        = {};
+	db        = {},
+	username, password;
+
+if (process.env.ENV == "DEV") {
+	username = 'jjacobson';
+	password = null;
+} else {
+	username = 'postgres';
+	password = 'postmaster';
+}
+
+var sequelize = new Sequelize('javelin', username, password, {
+	dialect: 'postgres',
+	define: {
+		underscored: true
+	},
+	pool: {
+		maxConnections: 40,
+		maxIdleTime: 30
+	}
+});
 
 // Create the DB object
 fs.readdirSync(__dirname).filter(function(file) {

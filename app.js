@@ -20,12 +20,5 @@ db.sequelize.sync().complete(function(err) {
 
 			console.log('Listening at %s:%d', address.address, address.port);
 		});
-
-		app.use(function(err, req, res, next) {
-			res.status(500);
-			console.log("GET IN THE FUCKING ERROR STATE");
-
-			res.send("ERROR");
-		});
 	}
 });

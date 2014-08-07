@@ -27,6 +27,7 @@ build/Release
 node_modules
 
 static/bower_components
+static/dist
 
 # Users Environment Variables
 .lock-wscript

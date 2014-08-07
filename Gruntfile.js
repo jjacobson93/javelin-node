@@ -8,29 +8,29 @@ module.exports = function(grunt) {
 		"./static/bower_components/fullcalendar/fullcalendar.css",
 		"./static/bower_components/angular-bootstrap-toggle-switch/style/bootstrap3/angular-toggle-switch-bootstrap-3.css",
 		"./static/bower_components/eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css",
-		"./static/styles/flat-ui-switch.less",
 		"./static/styles/pe-icon-7-stroke.css",
 		"./static/styles/pe-icon-helper.css",
 		"./static/styles/colors.css",
 		"./static/styles/fonts.css",
 		"./static/bower_components/animate.css/animate.min.css",
-		"./static/styles/variables.less",
-		"./static/styles/style.less",
-		"./static/styles/buttons.less",
-		"./static/styles/badges.less",
-		"./static/styles/animations.less",
-		"./static/styles/typography.less",
-		"./static/styles/login.less",
-		"./static/styles/navigation.less",
-		"./static/styles/marketing.less",
-		"./static/styles/notifications.less",
-		"./static/styles/form.less",
-		"./static/styles/tables.less",
-		"./static/styles/panels.less",
-		"./static/styles/tabs.less",
-		"./static/styles/people.less",
-		"./static/styles/groups.less",
-		"./static/styles/events.less"
+		// ".tmp/styles/variables.css",
+		"./.tmp/styles/flat-ui-switch.css",
+		"./.tmp/styles/style.css",
+		"./.tmp/styles/buttons.css",
+		"./.tmp/styles/badges.css",
+		"./.tmp/styles/animations.css",
+		"./.tmp/styles/typography.css",
+		"./.tmp/styles/login.css",
+		"./.tmp/styles/navigation.css",
+		"./.tmp/styles/marketing.css",
+		"./.tmp/styles/notifications.css",
+		"./.tmp/styles/form.css",
+		"./.tmp/styles/tables.css",
+		"./.tmp/styles/panels.css",
+		"./.tmp/styles/tabs.css",
+		"./.tmp/styles/people.css",
+		"./.tmp/styles/groups.css",
+		"./.tmp/styles/events.css"
 	];
 
 	var jsFilesToInject = [
@@ -71,54 +71,43 @@ module.exports = function(grunt) {
 	];
 
 	// Modify css file injection paths to use 
-	cssFilesToInject = cssFilesToInject.map(function (path) {
-		return '.tmp/public/' + path;
-	});
+	// cssFilesToInject = cssFilesToInject.map(function (path) {
+	// 	return '.tmp/public/' + path;
+	// });
 
-	// Modify js file injection paths to use 
-	jsFilesToInject = jsFilesToInject.map(function (path) {
-		return '.tmp/public/' + path;
-	});
+	// // Modify js file injection paths to use 
+	// jsFilesToInject = jsFilesToInject.map(function (path) {
+	// 	return '.tmp/public/' + path;
+	// });
 
 	grunt.initConfig({
 		pkg: grunt.file.readJSON('package.json'),
 
-		copy: {
-			dev: {
-				files: [
-					{
-					expand: true,
-					cwd: './static',
-					src: ['**/*.!(coffee)'],
-					dest: '.tmp/public'
-					}
-				]
-			},
+		// copy: {
+		// 	build: {
+		// 		files: [
+		// 			{
+		// 			expand: true,
+		// 			cwd: 'static',
+		// 			src: ['**/*.*'],
+		// 			dest: '.tmp/public/static'
+		// 			}
+		// 		]
+		// 	}
+		// },
+
+		clean: {
+			build: ['.tmp/**'],
+		},
+
+		less: {
 			build: {
 				files: [
 					{
 					expand: true,
-					cwd: '.tmp/public',
-					src: ['**/*'],
-					dest: 'www'
-				}
-				]
-			}
-		},
-
-		clean: {
-			dev: ['.tmp/public/**'],
-			build: ['www']
-		},
-
-		less: {
-			dev: {
-				files: [
-					{
-					expand: true,
-					cwd: './static/styles/',
+					cwd: 'static/styles/',
 					src: ['*.less'],
-					dest: '.tmp/public/styles/',
+					dest: '.tmp/styles/',
 					ext: '.css'
 				}
 				]
@@ -128,83 +117,31 @@ module.exports = function(grunt) {
 		concat: {
 			js: {
 				src: jsFilesToInject,
-				dest: '.tmp/public/concat/production.js'
+				dest: '.tmp/concat/production.js'
 			},
 			css: {
 				src: cssFilesToInject,
-				dest: '.tmp/public/concat/production.css'
+				dest: '.tmp/concat/production.css'
 			}
 		},
 
 		uglify: {
-			dist: {
-				src: ['.tmp/public/concat/production.js'],
-				dest: '.tmp/public/min/production.js'
+			build: {
+				src: ['.tmp/concat/production.js'],
+				dest: 'static/dist/production.min.js'
 			}
 		},
 
 		cssmin: {
-			dist: {
-				src: ['.tmp/public/concat/production.css'],
-				dest: '.tmp/public/min/production.css'
+			build: {
+				src: ['.tmp/concat/production.css'],
+				dest: 'static/dist/production.min.css'
 			}
-		},
-
-		// 'javelin-linker': {
-		// 	devJs: {
-		// 		options: {
-		// 			startTag: '<!-- SCRIPTS -->',
-		// 			endTag: '<!-- SCRIPTS END -->',
-		// 			fileTmpl: '<script src="%s"></script>',
-		// 			appRoot: '.tmp/public'
-		// 		},
-		// 		files: {
-		// 			'views/index.ejs': jsFilesToInject
-		// 		}
-		// 	},
-
-		// 	prodJs: {
-		// 		options: {
-		// 			startTag: '<!--SCRIPTS -->',
-		// 			endTag: '<!-- SCRIPTS END -->',
-		// 			fileTmpl: '<script src="%s"></script>',
-		// 			appRoot: '.tmp/public'
-		// 		},
-		// 		files: {
-		// 			'views/index.ejs': ['.tmp/public/min/production.js']
-		// 		}
-		// 	},
-
-		// 	devStyles: {
-		// 		options: {
-		// 			startTag: '<!-- STYLES -->',
-		// 			endTag: '<!-- STYLES END -->',
-		// 			fileTmpl: '<link rel="stylesheet" href="%s">',
-		// 			appRoot: '.tmp/public'
-		// 		},
-
-		// 		// cssFilesToInject defined up top
-		// 		files: {
-		// 			'views/index.ejs': cssFilesToInject
-		// 		}
-		// 	},
-
-		// 	prodStyles: {
-		// 		options: {
-		// 			startTag: '<!-- STYLES -->',
-		// 			endTag: '<!-- STYLES END -->',
-		// 			fileTmpl: '<link rel="stylesheet" href="%s">',
-		// 			appRoot: '.tmp/public'
-		// 		},
-		// 		files: {
-		// 			'views/index.ejs': ['.tmp/public/min/production.css']
-		// 		}
-		// 	},
-		// }
+		}
 	});
 
 	grunt.loadNpmTasks('grunt-contrib-clean');
-	grunt.loadNpmTasks('grunt-contrib-copy');
+	// grunt.loadNpmTasks('grunt-contrib-copy');
 	grunt.loadNpmTasks('grunt-contrib-concat');
 	grunt.loadNpmTasks('grunt-contrib-watch');
 	grunt.loadNpmTasks('grunt-contrib-uglify');
@@ -212,42 +149,12 @@ module.exports = function(grunt) {
 	grunt.loadNpmTasks('grunt-contrib-less');
 
 	grunt.registerTask('default', [
-		'compileAssets' //,
-		// 'linkAssets'
-	]);
-
-	grunt.registerTask('compileAssets', [
-		'clean:dev',
-		'less:dev',
-		'copy:dev',
-	]);
-
-	// grunt.registerTask('linkAssets', [
-
-	// 	// Update link/script/template references in `assets` index.html
-	// 	'javelin-linker:devJs',
-	// 	'javelin-linker:devStyles',
-	// ]);
-
-
-	// Build the assets into a web accessible folder.
-	// (handy for phone gap apps, chrome extensions, etc.)
-	grunt.registerTask('build', [
-		'compileAssets',
-		// 'linkAssets',
-		'clean:build',
-		'copy:build'
-	]);
-
-	// When sails is lifted in production
-	grunt.registerTask('prod', [
-		'clean:dev',
-		'less:dev',
-		'copy:dev',
+		'clean',
+		'less:build',
 		'concat',
 		'uglify',
-		'cssmin'
-		// 'javelin-linker:prodJs',
-		// 'javelin-linker:prodStyles'
+		'cssmin',
+		'clean'
 	]);
+
 };
