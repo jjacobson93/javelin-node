@@ -28,7 +28,7 @@ exports.findCrew = function(req, res) {
 		include: [{
 			model: db.person,
 			as: 'crew_members',
-			attributes: ['id', 'last_name', 'first_name']
+			attributes: ['id', 'last_name', 'first_name', 'grad_year']
 		}],
 		order: "crew_members.last_name"
 	}, {
