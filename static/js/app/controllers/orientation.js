@@ -20,6 +20,14 @@ app.controller('OrientationController', ['$scope', '$state', '$modal', '$q', '$h
 		});
 	}
 
+	$scope.updateRoom = function(id) {
+		$http.put('/api/orientation/crews/' + id, {
+			room: $scope.currentCrew.room || null
+		}).error(function(err) {
+			notify('error', 'Could not get group. Refresh and try again.');
+		});
+	};
+
 	if ($state.current.name == 'orientation.crew') {
 		$scope.getCrew($state.params.id);
 	}

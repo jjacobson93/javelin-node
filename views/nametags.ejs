@@ -1,0 +1,118 @@
+<!doctype>
+<html ng-app="Nametags">
+
+<head>
+<style type="text/css">
+	body {
+		margin: 0;
+		padding: 0;
+	}
+
+	.page {
+		margin: 0;
+		padding: 0;
+		width: 8.5in;
+		padding-top: 0.4in;
+		padding-bottom: 0in;
+		padding-left: 0.14in;
+		padding-right: -0.14in;
+	}
+
+	.nametag {
+		width: 4in;
+		height: 2in;
+		margin: 0;
+		padding: 0;
+		display: inline-block;
+		margin-right: 0.14in;
+		border: 1px solid black;
+		margin-bottom: 2px;
+	}
+
+	h2 {
+		text-align: center;
+	}
+
+	img.image-right,
+	img.image-left {
+		display: inline-block;
+		width: 32px;
+		position: relative;
+		top: 20px;
+	}
+
+	h4 {
+		display: inline-block;
+	}
+
+	img.image-left {
+		left: 20px;
+	}
+
+	img.image-right {
+		right: 20px;
+	}
+
+	@media print {
+		.body {
+			width: 100%;
+			margin: 0;
+			padding: 0;
+		}
+
+		.page {
+			width: 80%;
+			margin: 0;
+			padding: 0;
+			padding-left: 0.14in;
+			/*padding-right: 0.02in;*/
+		}
+
+		.nametag {
+			margin-right: 0.12in;
+		}
+	}
+
+</style>
+</head>
+
+<body ng-controller="NametagController">
+	<div class="page" ng-repeat="page in pages">
+		<div class="nametag" ng-repeat="nametag in page">
+			<div class="header">
+				<img class="image-left" src="/static/images/vc2emblem.png">
+				<h4 class="title">2014 Freshmen Orientation</h4>
+				<img class="image-right" src="/static/images/vc2emblem.png">
+			</div>
+
+			<h2>{{nametag.first_name}}</h2>
+		</div>
+	</div>
+
+
+</body>
+
+<script src="/static/bower_components/angular/angular.min.js"></script>
+<script type="text/javascript">
+
+var app = angular.module('Nametags', []);
+
+app.controller("NametagController", function($scope, $http) {
+	$scope.pages = [];
+
+	$http.get('/api/people').success(function(people) {
+		while (people.length > 0) $scope.pages.push(people.splice(0, 10));
+		console.log($scope.pages);
+	}).error(function(err) {
+		console.log(err);
+	});
+
+	// $http.get('/api/orientation/crews').success(function(crews) {
+	// 	$scope.crews = crews;
+	// }).error(function(err) {
+	// 	console.log(err);
+	// });
+});
+</script>
+
+</html>

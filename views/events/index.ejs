@@ -26,7 +26,7 @@
 							<tr ng-if="!events || (events && events.length == 0)">
 								<td colspan="3" style="text-align:center"><strong>No Events. Click "Create Event" to create one.</strong></td>
 							</tr>
-							<tr ng-repeat="event in events" ui-sref="event.attendance({ id: {{event.id}} })">
+							<tr ng-repeat="event in events" ui-sref="events.attendance({ id: {{event.id}} })">
 								<td>{{ event.title }}</td>
 								<td>{{ event.start | moment:'LLL' }}</td>
 								<td>{{ event.end | moment:'LLL' }}</td>
