@@ -13,6 +13,7 @@ module.exports = function(sequelize, DataTypes) {
 		classMethods: {
 			associate: function(models) {
 				Course.belongsTo(models.department, { foreignKey: "department_id" });
+				Course.hasMany(models.section);
 			}
 		}
 	});

@@ -6,15 +6,31 @@
 	<div class="panel panel-default panel-tabbed">
 		<tabset>
 			<tab heading="Import">
-				<form id="import-leaders" ng-submit="submitImportLeaders()">
-					<div class="form-group">
-						<label>Crew Leaders</label>
-						<input type="file" name="csvFile" onchange="angular.element(this).scope().fileUpload.change(this.files)">
-					</div>
-					<input type="submit" class="btn btn-warning" value="Import Leaders">
-					<input type="hidden" name="_csrf" value="<%= _csrf %>">
-				</form>
+				<div ng-class="{'dimmed': importInProgress}">
+					<!-- <form id="import-leaders" ng-submit="submitImportLeaders()">
+						<div class="form-group">
+							<label>Crew Leaders</label>
+							<input type="file" name="csvFileLeaders" onchange="angular.element(this).scope().fileUpload.change(this.files)">
+						</div>
+						<input type="submit" class="btn btn-warning" value="Import Leaders" ng-disabled="importInProgress">
+						<input type="hidden" name="_csrf" value="<%= _csrf %>">
+					</form> -->
+
+					<form id="import-students" ng-submit="submitImportStudents()">
+						<div class="form-group">
+							<label>All Students</label>
+							<input type="file" name="csvFileStudents" onchange="angular.element(this).scope().fileUpload.change(this.files)">
+						</div>
+						<input type="submit" class="btn btn-red" value="Import Students" ng-disabled="importInProgress">
+						<input type="hidden" name="_csrf" value="<%= _csrf %>">
+					</form>
+				</div>
+
+				<div ng-if="importInProgress"><h1>Import In Progress... <span class="fa fa-spin fa-circle-o-notch"></span></h1></div>
 			</tab>
+			<!-- <tab heading="Organize">
+				<button class="btn btn-lg btn-orange" ng-click="organizeCrews()" ng-disabled="organizeInProgress">Organize Crews</button>
+			</tab> -->
 		</tabset>
 	</div>
 </div>

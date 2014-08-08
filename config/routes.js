@@ -86,7 +86,11 @@ module.exports = function(app) {
 	app.post('/api/orientation/crews/:id/members', requiresLogin, orientation.addMembersToCrew);
 	app.delete('/api/orientation/crews/:id/members/:person_id', requiresLogin, orientation.removeMemberFromCrew);
 
-	app.post('/api/orientation/import-leaders', requiresLogin, orientation.importCrewLeaders);
+	// app.post('/api/orientation/import-leaders', requiresLogin, orientation.importCrewLeaders);
+	// app.post('/api/orientation/organize-crews', requiresLogin, orientation.organizeCrews);
+
+	// admin
+	app.post('/api/admin/import-students', requiresLogin, admin.importAndCrew);
 
 	// app.get('/api/tutoring/attendance', requiresLogin, tutoring.findAttendance);
 

@@ -15,6 +15,7 @@ if (process.env.ENV == "DEV") {
 
 var sequelize = new Sequelize('javelin', username, password, {
 	dialect: 'postgres',
+	logging: false,
 	define: {
 		underscored: true
 	},

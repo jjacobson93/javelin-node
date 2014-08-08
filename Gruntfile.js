@@ -137,11 +137,21 @@ module.exports = function(grunt) {
 				src: ['.tmp/concat/production.css'],
 				dest: 'static/dist/production.min.css'
 			}
+		},
+
+		watch: {
+			js: {
+				files: ['static/js/**/*'],
+				tasks: ['default']
+			},
+			styles: {
+				files: ['static/styles/*'],
+				tasks: ['default']
+			}
 		}
 	});
 
 	grunt.loadNpmTasks('grunt-contrib-clean');
-	// grunt.loadNpmTasks('grunt-contrib-copy');
 	grunt.loadNpmTasks('grunt-contrib-concat');
 	grunt.loadNpmTasks('grunt-contrib-watch');
 	grunt.loadNpmTasks('grunt-contrib-uglify');

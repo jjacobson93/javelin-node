@@ -3,7 +3,8 @@ var _ = require('lodash');
 var util = require('util');
 var fs = require('fs');
 var multiparty = require('multiparty');
-var csv = require('csv')
+var csv = require('csv');
+var async = require('async');
 
 exports.findCrews = function(req, res) {
 	db.crew.findAll({
@@ -268,4 +269,178 @@ exports.importCrewLeaders = function(req, res) {
 	} else {
 		res.status(400).json({ message: "Invalid file" });
 	}
+};
+
+exports.organizeCrews = function(req, res) {
+	if (req.query.simple) {
+
+		db.person.findAll({
+			where: { grad_year: 2018 }
+		}).success(function(people) {
+			var crewIdx = 1;
+
+			// Loop through people and assign to crews
+			async.each(people, function(person, cb) {
+				
+			});
+
+		}).error(function(err) {
+			res.status(400).json({ message: "Could not organize crews: " + err });
+		});
+
+	} else {
+		res.status(400).json({ message: "Could not organize crews" });
+	}
+
+
+	// db.course.findAll({
+	// 	where: { code: ['EN228', 'EN135', 'EN137'] }
+	// }, {
+	// 	transaction: req.t
+	// }).success(function(courses) {
+	// 	var numCrews = 0;
+	// 	var crewIndex = 1;
+	// 	var inCrews = [];
+	// 	var tempList = [];
+
+	// 	// Loop through courses
+	// 	async.each(courses, function(course, courseCallback) {
+
+	// 		// Find sections of course
+	// 		course.getSections({
+	// 			include: [{
+	// 				model: db.person,
+	// 				as: 'enrollees'
+	// 			}]
+	// 		}, {
+	// 			transaction: req.t
+	// 		}).success(function(sections) {
+	// 			// Loop through sections
+	// 			async.each(sections, function(section, sectionCallback) {
+	// 				console.log("SECTION:", section.enrollees.length);
+
+	// 				numCrews = Math.round(section.enrollees.length/10);
+	// 				if (numCrews == 0 && section.enrollees.length >= 5) {
+	// 					numCrews = 1;
+	// 				} else if ((numCrews == 0 || numCrews == 1) && section.enrollees.length < 5) {
+	// 					Array.prototype.push.apply(tempList, section.enrollees);
+	// 				}
+
+	// 				console.log("NUM CREWS:", numCrews);
+
+	// 				if (numCrews != 0) {
+	// 					// Go through all the students
+	// 					async.whilst(function() {
+	// 						return section.enrollees.length > 0;
+	// 					}, function(studentCallback) {
+	// 						var i = 0;
+	// 						// Loop through crews
+	// 						async.whilst(function() {
+	// 							return (i < numCrews && section.enrollees && section.enrollees.length > 0);
+	// 						}, function(crewCallback) {
+	// 							// Get the next student
+	// 							var student = section.enrollees.shift();
+	// 							if (!_.contains(inCrews, student.id)) {
+	// 								// Find or create new crew
+	// 								db.crew.findOrCreate({
+	// 									where: { id: crewIndex + i }
+	// 								}, {}, {
+	// 									transaction: req.t
+	// 								}).success(function(crew) {
+	// 									// Add to crew
+	// 									student.setCrew(crew, {
+	// 										transaction: req.t
+	// 									}).success(function(crew) {
+	// 										inCrews.push(student.id);
+	// 										i += 1;
+	// 										crewCallback();
+	// 									}).error(function(err) {
+	// 										i += 1;
+	// 										crewCallback(err);
+	// 									});
+	// 								}).error(function(err) {
+	// 									i += 1;
+	// 									crewCallback(err);
+	// 								});
+	// 							} else {
+	// 								i += 1;
+	// 								crewCallback();
+	// 							}
+	// 						}, function(err) {
+	// 							studentCallback(err);
+	// 						}); // end crew loop
+
+	// 					}, function(err) {
+	// 						if (!err) crewIndex += numCrews;
+	// 						sectionCallback(err);
+	// 					}); // end student while
+	// 				} else {
+	// 					sectionCallback();
+	// 				}
+
+	// 			}, function(err) {
+	// 				courseCallback(err);
+	// 			});
+
+	// 		}).error(function(err) {
+	// 			courseCallback(err);
+	// 		});
+
+	// 	}, function(err) {
+	// 		if (err) {
+	// 			res.status(400).json({ message: err });
+	// 		} else {
+	// 			// Unload temp list
+	// 			async.whilst(function() {
+	// 				return (tempList && tempList.length > 0)
+	// 			}, function(tempCallback) {
+	// 				var student = tempList.shift();
+	// 				if (!_.contains(inCrews, student.id)) {
+	// 					// Get the crew with the lowest
+	// 					db.crew.findAll({
+	// 						attributes: ['crews.*', [db.sequelize.fn('COUNT', db.sequelize.col('crews.id')), 'crewCount']],
+	// 						include: [{
+	// 							model: db.person,
+	// 							as: 'crew_members',
+	// 							attributes: []
+	// 						}],
+	// 						order: [['crewCount']],
+	// 						group: [["crews.id"], ["crew_members.id"]]
+	// 					}, {
+	// 						transaction: req.t
+	// 					}).success(function(crews) {
+	// 						if (crews) {
+	// 							student.updateAttributes({
+	// 								crew_id: crews[0]
+	// 							}, {
+	// 								transaction: req.t
+	// 							}).success(function(crew) {
+	// 								tempCallback();
+	// 							}).error(function(err) {
+	// 								tempCallback(err);
+	// 							});
+	// 						} else {
+	// 							tempCallback();
+	// 						}
+	// 					}).error(function(err) {
+	// 						tempCallback(err);
+	// 					});
+
+	// 				} else {
+	// 					tempCallback();
+	// 				}
+
+	// 			}, function(err) {
+	// 				if (!err) {
+	// 					res.send("OK");
+	// 				} else {
+	// 					res.status(400).json({ message: err });
+	// 				}
+	// 			});
+	// 		}
+	// 	});
+
+	// }).error(function(err) {
+	// 	res.status(400).json({ message: err });
+	// });
 };

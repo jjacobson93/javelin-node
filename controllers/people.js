@@ -1,7 +1,9 @@
 var db = require('../models');
 
 exports.findAll = function(req, res) {
-	var query = {};
+	var query = {
+		order: [[db.sequelize.col('people.last_name')], [db.sequelize.col('people.first_name')]]
+	};
 	
 	if (req.query.search == undefined) {
 		for (var key in req.query) {
@@ -24,7 +26,7 @@ exports.findAll = function(req, res) {
 	}
 
 	db.person.findAll(query, {
-		transaction: req.t
+		transaction: req.t,
 	}).success(function(people) {
 		res.json(people);
 	}).error(function(err) {

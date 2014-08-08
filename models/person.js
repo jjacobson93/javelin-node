@@ -4,19 +4,11 @@ module.exports = function(sequelize, DataTypes) {
 		student_id: DataTypes.INTEGER,
 		last_name: {
 			type: DataTypes.STRING,
-			allowNull: false,
-			validate: {
-				isAlpha: true,
-				notEmpty: true
-			}
+			allowNull: false
 		},
 		first_name: {
 			type: DataTypes.STRING,
-			allowNull: false,
-			validate: {
-				isAlpha: true,
-				notEmpty: true
-			}
+			allowNull: false
 		},
 		sex: {
 			type: DataTypes.ENUM('Male', 'Female'),
