@@ -11,7 +11,8 @@ exports.findCrews = function(req, res) {
 		include: [{
 			model: db.person,
 			as: 'crew_members',
-		}]
+		}],
+		order: "crews.id"
 	}, {
 		transaction: req.t
 	}).success(function(crews) {
@@ -28,7 +29,8 @@ exports.findCrew = function(req, res) {
 			model: db.person,
 			as: 'crew_members',
 			attributes: ['id', 'last_name', 'first_name']
-		}]
+		}],
+		order: "crew_members.last_name"
 	}, {
 		transaction: req.t
 	}).success(function(crew) {
