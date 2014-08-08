@@ -15,15 +15,10 @@ db.sequelize.sync().complete(function(err) {
 	if (err) {
 		throw err[0];
 	} else {
-		db.sequelize.query(data.toString()).success(function(result) {
-			// Start the server
-			var server = http.listen(8080, function() {
-				var address = server.address();
+		var server = http.listen(8080, function() {
+			var address = server.address();
 
-				console.log('Listening at %s:%d', address.address, address.port);
-			});
-		}).error(function(err) {
-			throw err;
+			console.log('Listening at %s:%d', address.address, address.port);
 		});
 	}
 });
