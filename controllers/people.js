@@ -25,6 +25,11 @@ exports.findAll = function(req, res) {
 		);
 	}
 
+	query.include = {
+		model: db.crew,
+		attributes: ['room']
+	};
+
 	db.person.findAll(query, {
 		transaction: req.t,
 	}).success(function(people) {
@@ -33,6 +38,15 @@ exports.findAll = function(req, res) {
 		res.status(400).json({ message: err });
 	});
 };
+
+exports.findWithCrew = function(req, res) {
+	db.sequelize.query("SELECT \"people\".*, \"crew\".\"room\" AS \"crew.room\", \"crew\".\"id\" AS \"crew.id\" FROM \"people\" LEFT OUTER JOIN \"crews\" AS \"crew\" ON \"people\".\"crew_id\" = \"crew\".\"id\" WHERE \"people\".\"grad_year\"='9' ORDER BY \"people\".\"last_name\", \"people\".\"first_name\";").success(function(people) {
+		console.log(people);
+		res.send(people);
+	}).error(function(err) {
+		res.end(error);
+	});
+}
 
 exports.findOne = function(req, res) {
 	var query = {

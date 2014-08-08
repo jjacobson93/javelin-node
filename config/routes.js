@@ -36,6 +36,7 @@ module.exports = function(app) {
 
 	// people
 	app.get('/api/people', requiresLogin, people.findAll);
+	app.get('/api/people/crews', requiresLogin, people.findWithCrew);
 	app.get('/api/people/:id', requiresLogin, people.findOne);
 	app.get('/api/people/filter/', requiresLogin, people.filterAll);
 

@@ -42,6 +42,7 @@ module.exports = function(sequelize, DataTypes) {
 				Person.hasMany(models.section, { foreignKey: "person_id", through: models.enrollment });
 				Person.hasMany(models.tutoring_attendance, { foreignKey: "person_id" });
 				Person.hasMany(models.event, { foreignKey: "person_id", through: models.attendee });
+				Person.belongsTo(models.crew, { foreignKey: "crew_id" });
 			}
 		}
 	});
