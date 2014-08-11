@@ -82,7 +82,7 @@ exports.findOne = function(req, res) {
 		transaction: req.t
 	}).success(function(person) {
 		if (person && person.last_name == 'Q' && person.first_name == 'Q' && !_.contains(userRoles, 'super')) {
-			res.status(401).send("You do not have permission to access this person.");
+			res.status(401).send("Unauthorized");
 		} else {
 			res.json(person);
 		}

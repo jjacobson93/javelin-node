@@ -141,15 +141,14 @@
 
 	<script src="/static/dist/production.min.js"></script>
 
-
+	<% if ((typeof(flash) == "string" && flash !== "") || (typeof(flash) == "object" && flash && flash.message && flash.status)) { %>
 	<script type="text/javascript">
 
-	<% if ((typeof(flash) == "string" && flash !== "") || (typeof(flash) == "object" && flash && flash.message && flash.status)) { %>
 	$(function() {
 		notify("<%= (typeof(flash) != 'object') ? 'info' : flash.status || 'info' %>", "<%= (typeof(flash) == 'object') ? flash.message : flash %>");
 	});
-	<% } %>
 	</script>
+	<% } %>
 	<!--SCRIPTS END-->
 </body>
 
