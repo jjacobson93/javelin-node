@@ -109,14 +109,20 @@ exports.peopleNotInCrew = function(req, res) {
 				{ crew_id: { ne: crewId } },
 				{ crew_id: null }
 			),
-			db.Sequelize.or(
-				["last_name ILIKE ?", '%' + req.query.search + '%'],
-				["first_name ILIKE ?", '%' + req.query.search + '%']
+			db.Sequelize.and(
+				{ last_name: { ne: 'Q' } },
+				{ first_name: { ne: 'Q' } },
+				db.Sequelize.or(
+					["last_name ILIKE ?", '%' + req.query.search + '%'],
+					["first_name ILIKE ?", '%' + req.query.search + '%']
+				)
 			)
 		);
 	} else {
 		query.where = {
-			crew_id: { ne: crewId }
+			crew_id: { ne: crewId },
+			last_name: { ne: 'Q' },
+			first_name: { ne: 'Q' }
 		};
 	}
 

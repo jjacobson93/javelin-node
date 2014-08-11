@@ -8,8 +8,12 @@ app.controller('PeopleController', ['$scope', '$http', '$location', '$state', '$
 
 	var getPerson = function(id) {
 		$http.get('/api/people/' + id).success(function(data) {
-			$scope.currentPerson = data;
-			$state.go('people.detail', { id: $scope.currentPerson.id });
+			if (data && data != "null") {
+				$scope.currentPerson = data;
+				$state.go('people.detail', { id: $scope.currentPerson.id });
+			} else {
+				$state.go('people');
+			}
 		}).error(function(data) {
 			notify("error", "Could not get data");
 		});

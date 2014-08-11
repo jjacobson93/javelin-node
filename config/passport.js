@@ -30,19 +30,28 @@ module.exports = function(app) {
 	});
 
 	passport.deserializeUser(function(id, done) {
-		db.auth_user.find({ where: { id: id } }).done(function(err, user) {
+		db.auth_user.find({
+			where: { id: id },
+			include: [{
+				model: db.person
+			}, {
+				model: db.auth_role,
+				as: 'roles'
+			}]
+		}).done(function(err, user) {
 			if (err) {
 				done(err, null);
 			} else {
 				if (user) {
-					var userData = user.values;
-					user.getPerson().done(function(err, person) {
-						if (!err) {
-							delete(person.values.id);
-							_.extend(userData, person.values);
-						}
-						done(err, userData);
-					});
+					done(err, user.values);
+					// var userData = user.values;
+					// user.getPerson().done(function(err, person) {
+					// 	if (!err) {
+					// 		delete(person.values.id);
+					// 		_.extend(userData, person.values);
+					// 	}
+					// 	done(err, userData);
+					// });
 				} else {
 					done("UndefinedUser", null);
 				}

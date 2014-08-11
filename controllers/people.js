@@ -1,4 +1,5 @@
 var db = require('../models');
+var _ = require('lodash');
 
 exports.findAll = function(req, res) {
 	var query = {
@@ -12,17 +13,29 @@ exports.findAll = function(req, res) {
 			if (key !== "created_at" && key !== "updated_at" && key in db.person.rawAttributes) {
 				var field = db.person.rawAttributes[key];
 
-				if (field.type._typeName == 'VARCHAR')
+				if (field.type._typeName == 'VARCHAR') {
 					query.where[key] = { like: '%' + req.query[key] + '%' };
-				else
+				} else {
 					query.where[key] = req.query[key];
+				}
 			}
 		}
+
+		var w = { ne: 'Q' };
+		if (!query.where) query.where = {};
+		query.where['last_name'] = query.where['last_name'] ? db.Sequelize.and(query.where['last_name'], w) : w;
+		query.where['first_name'] = query.where['first_name'] ? db.Sequelize.and(query.where['first_name'], w) : w;
+
 	} else {
-		query.where = db.Sequelize.or(
-			["last_name ILIKE ?", '%' + req.query.search + '%'],
-			["first_name ILIKE ?", '%' + req.query.search + '%']
+		query.where = db.Sequelize.and(
+			db.Sequelize.or(
+				["last_name ILIKE ?", '%' + req.query.search + '%'],
+				["first_name ILIKE ?", '%' + req.query.search + '%']
+			),
+			{ last_name: { ne: 'Q' } },
+			{ first_name: { ne: 'Q' } }
 		);
+
 	}
 
 	query.include = {
@@ -49,6 +62,8 @@ exports.findWithCrew = function(req, res) {
 }
 
 exports.findOne = function(req, res) {
+	var userRoles = _.pluck(req.user.roles, 'name');
+
 	var query = {
 		where: { id: req.params.id },
 		include: [
@@ -66,7 +81,11 @@ exports.findOne = function(req, res) {
 	db.person.find(query, {
 		transaction: req.t
 	}).success(function(person) {
-		res.json(person);
+		if (person && person.last_name == 'Q' && person.first_name == 'Q' && !_.contains(userRoles, 'super')) {
+			res.status(401).send("You do not have permission to access this person.");
+		} else {
+			res.json(person);
+		}
 	}).error(function(err) {
 		res.status(400).json({ message: err });
 	});

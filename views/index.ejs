@@ -60,7 +60,7 @@
 				<% if (authUser) { %>
 				<li class="dropdown">
 					<a href="#" class="dropdown-toggle" data-toggle="dropdown">
-						<img class="person-pic" src=""><%= authUser.first_name + ' ' + authUser.last_name %><span class="caret"></span>
+						<img class="person-pic" src=""><%= authUser.person.first_name %><span class="caret"></span>
 					</a>
 					<ul class="dropdown-menu">
 						<li><a href="/logout"><span class="pe-7s-lock pe-lg"></span> Logout</a></li>

@@ -119,7 +119,6 @@ app.controller('GroupsController', ['$scope', '$state', '$modal', '$q', '$http',
 			resolve: {}
 		});
 
-		console.log("$scope.groups =", $scope.groupsTable.data);
 		modalInstance.result.then(function(newGroup) {
 			$scope.groupsTable.data.push(newGroup);
 			$scope.groupsTable.reload = true;
