@@ -98,6 +98,37 @@ exports.deleteCrew = function(req, res) {
 	});
 };
 
+exports.peopleNotInCrew = function(req, res) {
+	var crewId = req.param('id');
+	var query = {};
+
+	// We might be searching by last_name/first_name
+	if (req.query.search != undefined) {
+		query.where = db.Sequelize.and(
+			db.Sequelize.or(
+				{ crew_id: { ne: crewId } },
+				{ crew_id: null }
+			),
+			db.Sequelize.or(
+				["last_name ILIKE ?", '%' + req.query.search + '%'],
+				["first_name ILIKE ?", '%' + req.query.search + '%']
+			)
+		);
+	} else {
+		query.where = {
+			crew_id: { ne: crewId }
+		};
+	}
+
+	db.person.findAll(query, {
+		transaction: req.t
+	}).success(function(people) {
+		res.send(people);
+	}).error(function(err) {
+		res.status(400).send({ message: err });
+	});
+};
+
 exports.addMembersToCrew = function(req, res) {
 	var crewId = req.param('id');
 	var people = req.body.people;
@@ -122,34 +153,6 @@ exports.addMembersToCrew = function(req, res) {
 			}).error(function(err) {
 				res.status(400).json({ message: err });
 			});
-
-			// // Find person
-			// db.person.findAll({
-			// 	where: { id: people }
-			// }, {
-			// 	transaction: req.t
-			// }).success(function(peopleRows) {
-			// 	if (peopleRows && people.length > 0) {
-			// 		db.sequelize.query('UPDATE "people" SET "crew_id" = ? WHERE "people"."id" IN (?) RETURNING *;', db.person,
-			// 			{ raw: false }, [ crewId, people.join(",") ]).success(function(members) {
-			// 				res.json(members);
-			// 			}).error(function(err) {
-			// 				res.status(400).json({ message: err });
-			// 			});
-			// 		// // Add people to crew
-			// 		// crew.addCrewMember(people, {
-			// 		// 	transaction: req.t
-			// 		// }).success(function(members) {
-			// 		// 	res.json(members);
-			// 		// }).error(function(err) {
-			// 		// 	res.status(400).json({ message: err });
-			// 		// });
-			// 	} else {
-			// 		res.status(400).json({ message: "Some person does not exist." });
-			// 	}
-			// }).error(function(err) {
-			// 	res.status(400).json({ message: err });
-			// });
 		} else {
 			res.status(400).json({ message: util.format("Crew %d does not exist.", crewId) });
 		}

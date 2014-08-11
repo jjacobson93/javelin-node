@@ -4,7 +4,7 @@ var _ = require('lodash');
 exports.findAll = function(req, res) {
 	var start = new Date(parseInt(req.param('start')) * 1000);
 	var end = new Date(parseInt(req.param('end')) * 1000);
-	console.log(start);
+	
 	db.event.findAll({
 		where: {
 			start_time: { gte: start },

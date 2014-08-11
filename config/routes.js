@@ -84,6 +84,7 @@ module.exports = function(app) {
 	app.delete('/api/orientation/crews/:id', requiresLogin, orientation.deleteCrew);
 
 	app.get('/api/orientation/crews/:id', requiresLogin, orientation.findCrew);
+	app.get('/api/orientation/crews/:id/non-members', requiresLogin, orientation.peopleNotInCrew);
 	app.post('/api/orientation/crews/:id/members', requiresLogin, orientation.addMembersToCrew);
 	app.delete('/api/orientation/crews/:id/members/:person_id', requiresLogin, orientation.removeMemberFromCrew);
 

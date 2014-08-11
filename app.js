@@ -15,10 +15,22 @@ db.sequelize.sync().complete(function(err) {
 	if (err) {
 		throw err[0];
 	} else {
-		var server = http.listen(8080, function() {
-			var address = server.address();
+		fs.readFile('./initdb.sql', function(err, sql) {
+			if (!err) {
+				db.sequelize.query(sql.toString()).complete(function(err, result) {
+					if (!err) {
+						var server = http.listen(8080, function() {
+							var address = server.address();
 
-			console.log('Listening at %s:%d', address.address, address.port);
+							console.log('Listening at %s:%d', address.address, address.port);
+						});
+					} else {
+						throw err;
+					}
+				});
+			} else {
+				throw err;
+			}
 		});
 	}
 });

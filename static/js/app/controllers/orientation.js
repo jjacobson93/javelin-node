@@ -2,6 +2,7 @@ app.controller('OrientationController', ['$scope', '$state', '$modal', '$q', '$h
 	$scope.state = $state;
 	$scope.crews = [];
 	$scope.currentCrew = undefined;
+	$scope.personDropdown = { placeholder: 'Search for people', multiple: true, query: function() {} };
 	$scope.orientation = {};
 	$scope.orientation.peopleToAdd = [];
 	$scope.test = undefined;
@@ -10,8 +11,11 @@ app.controller('OrientationController', ['$scope', '$state', '$modal', '$q', '$h
 		$http.get('/api/orientation/crews/' + id).success(function(data) {
 			if (data != "null") {
 				$scope.currentCrew = data;
-				if ($state.current.name != 'orientation.crew')
+				$scope.personDropdown = $scope.addPersonDropdown(data.id);
+				$('#person-add-dropdown').select2($scope.personDropdown);
+				if ($state.current.name != 'orientation.crew') {
 					$state.go('orientation.crew', { id: data.id });
+				}
 			} else {
 				$state.go('orientation');
 			}
@@ -38,48 +42,50 @@ app.controller('OrientationController', ['$scope', '$state', '$modal', '$q', '$h
 		notify('error', 'There was an error getting crews. Please refresh.');
 	});
 
-	$scope.addPersonDropdown = {
-		placeholder: 'Search for people',
-		multiple: true,
-		allowClear: true,
-		id: function(person){
-			return person.id;
-		},
-		ajax: {
-			url: '/api/people',
-			dataType: 'json',
-			data: function(term, page){
-				return {
-					search: term,
-					// offset: (page - 1)*20,
-					// limit: 20
-				};
+	$scope.addPersonDropdown = function(crewId) {
+		return {
+			placeholder: 'Search for people',
+			multiple: true,
+			allowClear: true,
+			id: function(person){
+				return person.id;
 			},
-			results: function(data, page) {
-				return {
-					results: data.sort(function(a,b) {
-						if (a.last_name < b.last_name) {
-							return -1;
-						} else if (a.last_name > b.last_name) {
-							return 1;
-						} else if (a.first_name > b.first_name) {
-							return -1;
-						} else if (a.first_name < b.first_name) {
-							return 1;
-						} else {
-							return 0;
-						}
-					})
-				};
+			ajax: {
+				url: '/api/orientation/crews/' + crewId + '/non-members',
+				dataType: 'json',
+				data: function(term, page){
+					return {
+						search: term,
+						// offset: (page - 1)*20,
+						// limit: 20
+					};
+				},
+				results: function(data, page) {
+					return {
+						results: data.sort(function(a,b) {
+							if (a.last_name < b.last_name) {
+								return -1;
+							} else if (a.last_name > b.last_name) {
+								return 1;
+							} else if (a.first_name > b.first_name) {
+								return -1;
+							} else if (a.first_name < b.first_name) {
+								return 1;
+							} else {
+								return 0;
+							}
+						})
+					};
+				}
+			},
+			formatResult: function(person) {
+				return person.last_name + ', ' + person.first_name;
+			},
+			formatSelection: function(person) {
+				return person.last_name + ', ' + person.first_name;
 			}
-		},
-		formatResult: function(person) {
-			return person.last_name + ', ' + person.first_name;
-		},
-		formatSelection: function(person) {
-			return person.last_name + ', ' + person.first_name;
 		}
-	}
+	};
 
 	$scope.addPeopleToCrew = function(crewId) {
 		$http.post('/api/orientation/crews/' + crewId + '/members', {

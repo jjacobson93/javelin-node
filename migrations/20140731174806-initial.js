@@ -1,10 +1,23 @@
 module.exports = {
-  up: function(migration, DataTypes, done) {
-    // add altering commands here, calling 'done' when finished
-    done()
-  },
-  down: function(migration, DataTypes, done) {
-    // add reverting commands here, calling 'done' when finished
-    done()
-  }
+	up: function(migration, DataTypes, done) {
+		migration.addColumn(
+			'sections',
+			'instructor_id',
+			DataTypes.INTEGER
+		);
+
+		migration.addColumn(
+			'sections',
+			'code',
+			DataTypes.STRING
+		);
+
+		migration.addColumn(
+			'sections',
+			'room',
+			DataTypes.STRING
+		);
+
+		done()
+	}
 }

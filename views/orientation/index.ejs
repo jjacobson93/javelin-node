@@ -64,11 +64,12 @@
 			<div class="panel-heading">
 				<div class="row">
 					<div class="col-md-6">
-						<h3 style="display:inline-block">Crew #{{ currentCrew.id }}</h3> <input class="form-control" style="width:50%;display:inline-block" placeholder="Room" ng-model="currentCrew.room" ng-change="updateRoom(currentCrew.id)">
+						<h3 style="display:inline-block">Crew #{{ currentCrew.id }}</h3>
+						<!-- <input class="form-control" style="width:50%;display:inline-block" placeholder="Room" ng-model="currentCrew.room" ng-change="updateRoom(currentCrew.id)"> -->
 					</div>
 					<div class="col-md-6">
 						<div class="input-group">
-							<input type="hidden" ui-select2="addPersonDropdown" ng-model="orientation.peopleToAdd" style="width:100%">
+							<input id="person-add-dropdown" type="hidden" ui-select2="personDropdown" ng-model="orientation.peopleToAdd" style="width:100%">
 							<span class="input-group-btn">
 								<button class="btn btn-green" ng-disabled="orientation.peopleToAdd.length == 0" ng-click="addPeopleToCrew(currentCrew.id)">Add People</button>
 							</span>
@@ -89,7 +90,7 @@
 					</thead>
 					<tbody>
 						<tr ng-if="!currentCrew.crewMembers || currentCrew.crewMembers.length == 0">
-							<td colspan="3" style="text-align:center">
+							<td colspan="5" style="text-align:center">
 								<strong>No crew members. Type in names above and click "Add People" to add them.</strong>
 							</td>
 						</tr>
