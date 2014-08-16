@@ -15,7 +15,6 @@
   "dependencies": {
     "angular": "latest",
     "angular-route": "latest",
-    "angular-ui-bootstrap": "~0.11.0",
     "angular-resource": "latest",
     "bootstrap": "latest",
     "font-awesome": "latest",
@@ -34,7 +33,9 @@
     "moment": "~2.8.1",
     "eonasdan-bootstrap-datetimepicker": "https://github.com/Eonasdan/bootstrap-datetimepicker.git#~3.0.2",
     "underscore": "~1.6.0",
-    "angular-sanitize": "~1.2.21"
+    "angular-sanitize": "~1.2.21",
+    "lodash": "~2.4.1",
+    "angular-ui-bootstrap-bower": "~0.11.0"
   },
   "resolutions": {
     "angular": "1.2.21",

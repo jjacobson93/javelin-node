@@ -125,7 +125,7 @@ app.controller('GroupsController', ['$scope', '$state', '$modal', '$q', '$http',
 		});
 	};
 
-	$scope.openDeleteGroupModal = function(group, idx) {
+	$scope.openDeleteGroupModal = function(group) {
 		var modalInstance = $modal.open({
 			templateUrl: '/views/groups/delete_group',
 			controller: ['$scope', '$modalInstance', 'GroupService', function($scope, $modalInstance, GroupService) {
@@ -151,8 +151,7 @@ app.controller('GroupsController', ['$scope', '$state', '$modal', '$q', '$http',
 
 		modalInstance.result.then(function() {
 			$state.go('groups');
-			if ($scope.groupsTable && $scope.groupsTable.data) {
-				$scope.groupsTable.data.splice(idx, 1);
+			if ($scope.groupsTable) {
 				$scope.groupsTable.reload = true;
 			}
 		});

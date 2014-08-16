@@ -11,12 +11,24 @@ module.exports = function(sequelize, DataTypes) {
 		},
 		password: {
 			type: DataTypes.STRING,
-			allowNull: false,
 			set: function(password) {
 				var salt = bcrypt.genSaltSync(13);
 				var hash = bcrypt.hashSync(password, salt);
 				return this.setDataValue('password', hash);
 			}
+		},
+		invitation_expiration: {
+			type: DataTypes.DATE
+		},
+		invitation_key: {
+			type: DataTypes.STRING
+		},
+		active: {
+			type: DataTypes.BOOLEAN,
+			defaultValue: true
+		},
+		role: {
+			type: DataTypes.ENUM('student', 'tutor', 'staff', 'admin', 'super')
 		}
 	}, {
 		classMethods: {

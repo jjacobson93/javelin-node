@@ -57,7 +57,36 @@ exports.findWithCrew = function(req, res) {
 		console.log(people);
 		res.send(people);
 	}).error(function(err) {
-		res.end(error);
+		res.status(400).send(error);
+	});
+}
+
+exports.findNonUsers = function(req, res) {
+	var query = {}
+	query.where = db.Sequelize.and(
+		db.Sequelize.or(
+			["last_name ILIKE ?", '%' + req.query.search + '%'],
+			["first_name ILIKE ?", '%' + req.query.search + '%']
+		),
+		{ last_name: { ne: 'Q' } },
+		{ first_name: { ne: 'Q' } }
+	);
+
+	// Find all users
+	db.auth_user.findAll(query, {
+		transaction: req.t,
+		attributes: ['person_id']
+	}).success(function(users) {
+
+		db.people.findAll({
+			where: {
+				id: { not: _.pluck(users, 'person_id') }
+			}
+		})
+
+
+	}).error(function(err) {
+		res.status(400).json({ message: err });
 	});
 }
 
@@ -92,7 +121,7 @@ exports.findOne = function(req, res) {
 };
 
 exports.filterAll = function(req, res) {
-	db.person.find(req.query, {
+	db.person.findAll(req.query, {
 		transaction: req.t
 	}).success(function(people) {
 		res.json(people);

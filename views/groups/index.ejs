@@ -1,5 +1,12 @@
 <div javelin-navbar>
-	<button class="btn navbar-btn btn-green pull-right" ng-click="openCreateGroupModal()"><i class="fa fa-plus"></i> Create Group</button>
+	<button class="btn navbar-btn btn-red pull-right ng-fadeinoutright" ng-click="openDeleteGroupModal(currentGroup)" ng-show="state.current.name=='groups.detail'">
+		<span class="fa fa-trash-o"></span> Delete Group
+	</button>
+
+	<button class="btn navbar-btn btn-green pull-right ng-fadeinoutleft" ng-click="openCreateGroupModal()" ng-show="state.current.name=='groups'">
+		<span class="fa fa-plus"></span> Create Group
+	</button>
+
 	<a href="/#/groups" class="navbar-link ng-fadeinoutleft" ng-show="state.current.name=='groups.detail'" style="padding-right: 10px"><span class="fa fa-arrow-left"></span> Back</a>
 	<ol class="breadcrumb">
 		<li ng-class="{active: (state.current.name=='groups')}">
@@ -32,7 +39,6 @@
 				<div class="row">
 					<div class="col-md-6">
 						<h3 style="display:inline-block">{{ currentGroup.name }} <small>{{ currentGroup.description }}</small></h3>
-						<button class="btn btn-red" ng-click="openDeleteGroupModal(currentGroup, $index)" style="display: inline-block"><span class="fa fa-trash-o"></span> Delete Group</button>
 					</div>
 					<div class="col-md-6">
 						<div class="input-group">

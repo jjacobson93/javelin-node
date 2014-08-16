@@ -29,6 +29,8 @@
 	<link href='//fonts.googleapis.com/css?family=Lato:100,300,400,700,900,100italic,300italic,400italic,700italic,900italic' rel='stylesheet' type='text/css'>
 	<!-- STYLES -->
 	<link rel="stylesheet" href="/static/dist/production.min.css">
+	<style type="text/css">
+	</style>
 	<!-- STYLES END -->
 
 	<!-- DEV: Less -->
@@ -45,9 +47,12 @@
 
 <body ng-controller="MainController">
 	<div class="navbar-javelin-top navbar-fixed-top">
-		<a href="/" class="navbar-brand">
+		<% if (authUser) { %>
+		<a href="/#/" class="navbar-brand">
 			<span class="javelin-brand"><img src="/static/images/javelin-icon-v2.svg"></span>
 		</a>
+		<h4 class="navbar-text"><%= accountName %></h4>
+		<% } %>
 
 		<button class="navbar-toggle" type="button" data-toggle="collapse" data-target=".navbar-collapse">
 			<span class="icon-bar"></span>
@@ -122,18 +127,13 @@
 
 	<div ui-view></div>
 
-	<!-- <footer>
-		<div class="container">
-			<ul class="footer-links">
-				<li class="pull-right"><span>© {{=request.now.year}} Jacobson and Varni</span></li>
-				<li><span>Currently {{='v2.0.0-beta'}}</span></li>
-				<li><a href="/bugs">Bugs</a></li>
-				<li><a href="/forms">Forms</a></li>
-				<li><a href="/studybuddies">Study Buddies</a></li>
-				<li><a href="/changelog">Changelog</a></li>
-			</ul>
-		</div>
-	</footer> -->
+	<footer>
+		<ul class="footer-links">
+			<li class="pull-right"><span>© <%= now.getFullYear() %> <strong>BOLT, LLC</strong> ALL RIGHTS RESERVED</span></li>
+			<li><span>Currently <%='v' + version %></span></li>
+			<!-- <li><a href="/changelog">Changelog</a></li> -->
+		</ul>
+	</footer>
 	
 	<!--===============-->
 	<!--=== SCRIPTS ===-->
@@ -141,11 +141,12 @@
 
 	<script src="/static/dist/production.min.js"></script>
 
-	<% if ((typeof(flash) == "string" && flash !== "") || (typeof(flash) == "object" && flash && flash.message && flash.status)) { %>
+	<% if (flash && Object.keys(flash).length > 0) { %>
 	<script type="text/javascript">
-
 	$(function() {
-		notify("<%= (typeof(flash) != 'object') ? 'info' : flash.status || 'info' %>", "<%= (typeof(flash) == 'object') ? flash.message : flash %>");
+		<% for (var key in flash) { %>
+		notify("<%= key %>", "<%= flash[key] %>");
+		<% } %>
 	});
 	</script>
 	<% } %>

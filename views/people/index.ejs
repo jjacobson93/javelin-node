@@ -26,6 +26,10 @@
 
 	<!-- DETAIL -->
 	<div ng-switch-when="people.detail" class="slide-inleft-outright">
+		<button class="btn btn-success pull-right" ng-if="!currentPerson.authUser">
+			<span class="fa fa-plus"></span> Add User Account
+		</button>
+		
 		<h2>{{ currentPerson.first_name + ' ' + currentPerson.last_name }}</h2>
 
 		<div class="panel panel-default panel-tabbed">

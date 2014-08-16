@@ -11,9 +11,15 @@ var app = angular.module('JavelinApp',
 app.config(['$stateProvider', '$urlRouterProvider', 
 	function($stateProvider, $urlRouterProvider) {
 		$urlRouterProvider.otherwise(function($injector, $location) {
-			$injector.invoke(['AuthService', function(AuthService) {
+			$injector.invoke(['AuthService', '$window', function(AuthService, $window) {
 				var isAuthenticated = AuthService.isAuthenticated();
-				$location.path((isAuthenticated) ? '/' : '/login');
+				// $location.path((isAuthenticated) ? '/' : '/login');
+				if (!isAuthenticated) {
+					$location.path('/login');
+				} else {
+					if ($location.path() == '') $location.path('/'); 
+					else $window.location = '/404';
+				}
 			}]);
 		});
 
@@ -21,6 +27,12 @@ app.config(['$stateProvider', '$urlRouterProvider',
 			.state('login', {
 				url: '/login',
 				templateUrl: '/views/login'
+			})
+
+			.state('register', {
+				url: '/register/:key',
+				templateUrl: '/views/register',
+				controller: 'RegisterController'
 			})
 
 			.state('dashboard', {
@@ -75,18 +87,27 @@ app.config(['$stateProvider', '$urlRouterProvider',
 				url: '/admin',
 				templateUrl: '/views/admin',
 				controller: 'AdminController'
-			});
+			})
+				.state('admin.users', {
+					url: '/users'
+				})
+
+				.state('admin.imports', {
+					url: 'imports'
+				})
 	}
 ]);
 
 app.run(['$rootScope', '$state', '$window', 'AuthService', function($rootScope, $state, $window, AuthService) {
 	$rootScope.$on('$stateChangeStart', function(event, toState, toParams, fromState, fromParams) {
 		var isAuthenticated = AuthService.isAuthenticated();
-
-		if ((toState.name != 'login' && !isAuthenticated) || (toState.name == 'login' && isAuthenticated)) {
+		
+		if ((toState.name != 'register' && toState.name != 'login' && !isAuthenticated) ||
+			(toState.name == 'login' && isAuthenticated)) {
 			// $state.transitionTo('login')
 			$window.location = '/'
 			event.preventDefault();
+			return;
 		}
 	})
 }]);

@@ -33,3 +33,4 @@ static/dist
 .lock-wscript
 sequelize_test.js
 testapp.js
+config.json

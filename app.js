@@ -4,11 +4,15 @@ var http = require('http').Server(app);
 var db = require('./models');
 var errorHandler = require('./lib/errorHandler');
 var fs = require('fs');
+var redis = require("redis").createClient();
 
 app.use('/static', express.static(__dirname + '/static'));
 
+var config = require('./config.json');
+app.set('config', config);
+
 // Config
-require('./config')(app);
+require('./config/index')(app);
 
 // Set up DB
 db.sequelize.sync().complete(function(err) {

@@ -1,0 +1,29 @@
+<div class="add-user-modal">
+	<div class="modal-body">
+		<div class="form-group">
+			<label>Person</label>
+			<input type="hidden" ui-select2="personDropdown" ng-model="newUser.person" style="width:100%">
+		</div>
+		<div class="form-group">
+			<label>Email</label>
+			<input class="form-control" ng-model="newUser.email" type="email" placeholder="Email address">
+		</div>
+		<div class="form-group">
+			<label>Role</label>
+			<a href="#" a-prevent-default tooltip-placement="right" tooltip="Roles provide a user with certain access privileges. Each of these roles have all of the privileges of the lesser roles.">
+				<span class="fa fa-info-circle"></span>
+			</a>
+			<select ui-select2="{minimumResultsForSearch: -1}" ng-model="newUser.role" placeholder="Choose a role" style="display:block">
+				<option></option>
+				<option value="student">Student</option>
+				<option value="tutor">Tutor</option>
+				<option value="staff">Staff/Teacher</option>
+				<option value="admin">Admin</option>
+			</select>
+		</div>
+	</div>
+	<div class="modal-footer">
+		<button class="btn" ng-click="cancel()">Cancel</button>
+		<button class="btn btn-success" btn-loading="isSending" data-loading-text="Sending..." ng-click="addUser()" ng-disabled="!newUser.person || !newUser.email">Send Invitation</button>
+	</div>
+</div>

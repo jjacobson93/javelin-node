@@ -2,6 +2,19 @@
     color: #95A5A6 !important;
 }
 
+.select2-search input {
+    font-family: inherit;
+}
+
+.select2-search input.select2-active {
+    background: none;
+}
+
+.select2-search input.select2-active:after {
+    content: '\f110';
+    font-family: 'FontAwesome';
+}
+
 .select2-container .select2-choice {
     height: 42px;
     padding: 5px 10px 5px 8px;
@@ -17,8 +30,12 @@
     background-image: none;
 }
 
-.select2-container .select2-choise .select2-chosen {
+.select2-container .select2-choice .select2-chosen {
     color: #2C3E50;
+}
+
+.select2-container .select2-choice.select2-default .select2-chosen {
+    color: #95A5A6;
 }
 
 .select2-container.select2-container-active .select2-choice {

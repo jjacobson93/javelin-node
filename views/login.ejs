@@ -8,6 +8,11 @@ body {
 	margin: 0;*/
 }
 
+footer {
+	background-color: #34495e;
+	color: #bfd0e3;
+}
+
 @media screen and (max-width: 620px) {
 	body {
 		padding-bottom: 300px;
@@ -31,6 +36,14 @@ header.navbar-javelin {
 .javelin-main {
 	padding: 0;
 }
+
+h3 {
+	color: #fff;
+}
+
+footer {
+	left: 0;
+}
 </style>
 
 <section class="login fade-in">
@@ -40,11 +53,12 @@ header.navbar-javelin {
 			<small>Javelin</small>
 		</h4>
 	</div>
+	<h3><%= accountName || ''%></h3>
 	<div class="login-form">
 		<form action="/login" method="post">
 			<div>
 				<div class="form-group">
-					<input class="form-control" id="auth_user_username" name="username" placeholder="E-mail" type="text">
+					<input class="form-control" id="auth_user_username" name="username" placeholder="E-mail" type="email">
 				</div>
 				<div class="form-group">
 					<input class="form-control" id="auth_user_password" name="password" placeholder="Password" type="password">
@@ -52,9 +66,9 @@ header.navbar-javelin {
 				<div class="form-group">
 					<input class="btn btn-blue btn-lg btn-block" type="submit" value="Login">
 				</div>
-				<div>
-					<a href="/request_reset_password">Lost your password?</a>
-				</div>
+				<!-- <div>
+					<a href="/request_reset_password" class="center-anchor">Lost your password?</a>
+				</div> -->
 				<input type="hidden" name="_csrf" value="<%= _csrf %>">
 			</div>
 		</form>

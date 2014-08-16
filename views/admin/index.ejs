@@ -5,16 +5,52 @@
 <div class="javelin-main">
 	<div class="panel panel-default panel-tabbed">
 		<tabset>
-			<tab heading="Import">
+			<tab>
+				<tab-heading><span class="fa fa-users"></span> User Management</tab-heading>
+				<button class="btn btn-success pull-right" ng-click="openAddUserModal()"><span class="fa fa-plus"></span> Add User</button>
+				<table class="table table-hover">
+					<thead>
+						<tr>
+							<th>Last Name</th>
+							<th>First Name</th>
+							<th>Email</th>
+							<th>Created At</th>
+							<th>Active</th>
+							<th>Actions</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr ng-repeat="user in users">
+							<td>{{ user.person.last_name }}</td>
+							<td>{{ user.person.first_name }}</td>
+							<td>{{ user.username }}</td>
+							<td>{{ user.created_at | moment:'lll' }}</td>
+							<td>{{ (user.active) ? 'YES' : 'NO' }}</td>
+							<td>
+								<button class="btn btn-xs" ng-class="{'btn-red': user.active, 'btn-success': !user.active}" ng-hide="user.roles.indexOf('super') > -1 || user.invitation_key">
+									{{ (user.active) ? 'Deactivate' : 'Activate' }}
+								</button>
+								<button class="btn btn-xs btn-blue" ng-show="user.invitation_key" btn-loading="isSending" ng-click="resendInvitation(user)" data-loading-text="Sending..." ng-disabled="isSending">
+									Resend Invitation
+								</button>
+								<small ng-show="user.roles.indexOf('super') > -1"><span class="fa fa-ban"></span> Cannot edit super admin</small>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</tab>
+			<% if (_.contains(authUser.roles, 'super')) { %>
+			<tab>
+				<tab-heading><span class="fa fa-download"></span> Import</tab-heading>
 				<div ng-class="{'dimmed': importInProgress}">
-					<!-- <form id="import-leaders" ng-submit="submitImportLeaders()">
+					<form id="import-leaders" ng-submit="submitImportLeaders()">
 						<div class="form-group">
 							<label>Crew Leaders</label>
 							<input type="file" name="csvFileLeaders" onchange="angular.element(this).scope().fileUpload.change(this.files)">
 						</div>
 						<input type="submit" class="btn btn-warning" value="Import Leaders" ng-disabled="importInProgress">
 						<input type="hidden" name="_csrf" value="<%= _csrf %>">
-					</form> -->
+					</form>
 
 					<form id="import-students" ng-submit="submitImportStudents()">
 						<div class="form-group">
@@ -28,6 +64,7 @@
 
 				<div ng-if="importInProgress"><h1>Import In Progress... <span class="fa fa-spin fa-circle-o-notch"></span></h1></div>
 			</tab>
+			<% } %>
 			<!-- <tab heading="Organize">
 				<button class="btn btn-lg btn-orange" ng-click="organizeCrews()" ng-disabled="organizeInProgress">Organize Crews</button>
 			</tab> -->

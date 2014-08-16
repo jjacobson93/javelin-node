@@ -1,0 +1,85 @@
+<style type="text/css">
+body {
+	background-color: #2C3E50;
+	padding-left: 0;
+	/*position: absolute;
+	width: 100%;
+	height: 100%;
+	margin: 0;*/
+}
+
+footer {
+	background-color: #34495e;
+	color: #bfd0e3;
+}
+
+@media screen and (max-width: 620px) {
+	body {
+		padding-bottom: 300px;
+	}
+}
+
+footer {
+	background-color: #2C3E50;
+}
+
+header.navbar-javelin {
+	background-color: #2C3E50;	
+}
+
+.navbar-javelin-top,
+.navbar-javelin-top .navbar-brand,
+.navbar-javelin-top ul.navbar-nav.navbar-right {
+	background-color: #2C3E50;
+}
+
+.javelin-main {
+	padding: 0;
+}
+
+h3 {
+	color: #fff;
+}
+
+footer {
+	left: 0;
+}
+</style>
+
+<section class="login" ng-controller="RegisterController">
+	<div class="login-icon">
+		<img src="/static/images/javelin-icon-v2.svg">
+		<h4>Welcome to
+			<small>Javelin</small>
+		</h4>
+	</div>
+	<h3><%= accountName || ''%></h3>
+	<div class="login-form">
+		<form action="/register" method="post" name="registerForm" ng-show="!isLoading && user">
+			<div>
+				<div class="form-group">
+					<input class="form-control" id="auth_user_username" placeholder="E-mail" type="email" value="{{ user.username }}" disabled>
+				</div>
+				<div class="form-group">
+					<input class="form-control" id="auth_user_password" name="password" placeholder="Password" type="password" ng-model="register.password">
+				</div>
+				<div class="form-group">
+					<input class="form-control" id="auth_user_confirm_password" name="confirm_password" placeholder="Confirm Password" type="password" ng-model="register.confirmPassword">
+				</div>
+				<div class="form-group">
+					<input class="btn btn-blue btn-lg btn-block" type="submit" value="Register" ng-disabled="!confirmPassword()">
+				</div>
+				<input type="hidden" name="username" value="{{ user.username }}">
+				<input type="hidden" name="invitation_key" value="{{ user.invitation_key }}">
+				<input type="hidden" name="_csrf" value="<%= _csrf %>">
+			</div>
+		</form>
+		<div ng-show="isLoading">
+			<h2>Loading...</h2>
+		</div>
+		<div ng-show="!user">
+			<p>We're sorry! This invitation key is invalid or expired.</p>
+			<p>Please contact <a href="mailto:support@javelinwebapp.com">support@javelinwebapp.com</a>.</p>
+		</div>
+	</div>
+</section>

@@ -494,3 +494,19 @@ app.directive('datetimepicker', [function() {
 		}
 	}
 }]);
+
+app.directive("btnLoading", function(){
+	return {
+		scope: {
+			btnLoading: '='
+		},
+		link: function($scope, $elem, attrs) {
+			$scope.$watch('btnLoading', function(newVal, oldVal) {
+				if (newVal !== oldVal) {
+					if (newVal) return $elem.button("loading");
+					else return $elem.button("reset");
+				}
+			});
+		}
+	}
+});

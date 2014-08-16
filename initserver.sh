@@ -20,13 +20,14 @@ sudo ln -s /usr/bin/nodejs /usr/bin/node
 
 echo "Installing global node dependencies"
 echo "==================================="
-npm install -g bower
-npm install -g forever
-npm install -g grunt-cli karma
+sudo npm install -g bower
+sudo npm install -g forever
+sudo npm install -g grunt-cli karma
 
 echo "Setting up postgres"
 echo "==================="
-sudo -u postgres psql javelin -c "ALTER ROLE postgres WITH PASSWORD 'postmaster'; CREATE DATABASE javelin;"
+sudo -u postgres psql -c "ALTER ROLE postgres WITH PASSWORD 'postmaster';"
+sudo -u postgres psql -c "CREATE DATABASE javelin;"
 
 echo "Setting up Javelin"
 echo "=================="
@@ -36,7 +37,7 @@ cd /home/ubuntu/javelin-node/static
 bower install
 cd /home/ubuntu/javelin-node/static/bower_components/angular-ui-bootstrap
 npm install
-grunt build
+grunt --force
 cd /home/ubuntu/javelin-node
 grunt
 sudo forever start app.js
@@ -45,11 +46,14 @@ echo "Setting up nginx"
 echo "================"
 echo "What is the subdomain?"
 
-read subdomain
+read SUBDOMAIN
 
-sudo cat /root/keys/javelinwebapp.com.crt /root/keys/gd_bundle-g2-g1.crt >> /etc/nginx/ssl/javelinwebapp.com.chained.crt
-sudo cp /root/keys/javelinwebapp.com.crt /etc/nginx/ssl/javelinwebapp.com.crt
-sudo cp /root/keys/javelinwebapp.com.pem /etc/nginx/ssl/javelinwebapp.com.pem
+sudo su
+mkdir /etc/nginx/ssl
+touch /etc/nginx/ssl/javelinwebapp.com.chained.crt
+cat /root/keys/javelinwebapp.com.crt /root/keys/gd_bundle-g2-g1.crt >> /etc/nginx/ssl/javelinwebapp.com.chained.crt
+cp /root/keys/javelinwebapp.com.crt /etc/nginx/ssl/javelinwebapp.com.crt
+cp /root/keys/javelinwebapp.com.pem /etc/nginx/ssl/javelinwebapp.com.pem
 
 echo "upstream nodejs {
         server 127.0.0.1:8080 max_fails=0;
@@ -57,15 +61,15 @@ echo "upstream nodejs {
 
 server {
         listen 80;
-        server_name $subdomain.javelinwebapp.com;
-        return 301 https://$subdomain.javelinwebapp.com\$request_uri;
+        server_name $SUBDOMAIN.javelinwebapp.com;
+        return 301 https://$SUBDOMAIN.javelinwebapp.com\$request_uri;
 }
 
 server {
-        access_log /var/logs/$subdomain.javelinwebapp.com/ssl_access.log;
-        error_log /var/logs/$subdomain.javelinwebapp.com/ssl_error.log;
+        access_log /var/logs/$SUBDOMAIN.javelinwebapp.com/ssl_access.log;
+        error_log /var/logs/$SUBDOMAIN.javelinwebapp.com/ssl_error.log;
         listen 443;
-        server_name $subdomain.javelinwebapp.com;
+        server_name $SUBDOMAIN.javelinwebapp.com;
         ssl on;
         ssl_certificate ssl/javelinwebapp.com.chained.crt;
         ssl_certificate_key ssl/javelinwebapp.com.key;
@@ -83,12 +87,16 @@ server {
         }
 }" > /etc/nginx/sites-available/javelin
 
-sudo ln -s /etc/nginx/sites-available/javelin /etc/nginx/sites-enabled/javelin
+ln -s /etc/nginx/sites-available/javelin /etc/nginx/sites-enabled/javelin
 rm /etc/nginx/sites-enabled/default
+mkdir -p /var/logs/$SUBDOMAIN.javelinwebapp.com
 
 echo "Restarting nginx"
 echo "================"
-sudo nginx -c /etc/nginx/nginx.conf
-sudo nginx -s reload
+nginx -s stop
+nginx -c /etc/nginx/nginx.conf
+nginx -s reload
+
+exit
 
 echo "DONE!"

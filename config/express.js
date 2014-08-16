@@ -22,7 +22,7 @@ module.exports = function(app) {
 		resave: false,
 		saveUninitialized: false,
 		cookie: {
-			maxAge: 2*60*60*1000, // 2 hours
+			maxAge: 1*60*60*1000, // 1 hour
 			expires: false
 		},
 		genid: function() {
@@ -31,7 +31,8 @@ module.exports = function(app) {
 		store: new RedisStore({
 			host: '127.0.0.1',
 			port: 6379,
-			prefix: 'javsess'
+			prefix: 'javsess:',
+			ttl: 1*60*60 // 1 hour
 		})
 	}));
 	app.use(cookieParser());
