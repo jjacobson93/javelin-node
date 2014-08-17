@@ -11,6 +11,7 @@ sudo apt-get install mongodb
 sudo apt-get install redis-tools
 sudo apt-get install redis-server
 sudo apt-get install postgresql
+sudo apt-get install libpq-dev
 sudo apt-get install nodejs
 sudo apt-get install npm
 
@@ -22,7 +23,7 @@ echo "Installing global node dependencies"
 echo "==================================="
 sudo npm install -g bower
 sudo npm install -g forever
-sudo npm install -g grunt-cli karma
+sudo npm install -g grunt-cli
 
 echo "Setting up postgres"
 echo "==================="
@@ -35,12 +36,9 @@ cd /home/ubuntu/javelin-node
 npm install
 cd /home/ubuntu/javelin-node/static
 bower install
-cd /home/ubuntu/javelin-node/static/bower_components/angular-ui-bootstrap
-npm install
-grunt --force
 cd /home/ubuntu/javelin-node
 grunt
-sudo forever start app.js
+forever start app.js
 
 echo "Setting up nginx"
 echo "================"
@@ -52,8 +50,7 @@ sudo su
 mkdir /etc/nginx/ssl
 touch /etc/nginx/ssl/javelinwebapp.com.chained.crt
 cat /root/keys/javelinwebapp.com.crt /root/keys/gd_bundle-g2-g1.crt >> /etc/nginx/ssl/javelinwebapp.com.chained.crt
-cp /root/keys/javelinwebapp.com.crt /etc/nginx/ssl/javelinwebapp.com.crt
-cp /root/keys/javelinwebapp.com.pem /etc/nginx/ssl/javelinwebapp.com.pem
+cp /root/keys/javelinwebapp.com.key /etc/nginx/ssl/javelinwebapp.com.key
 
 echo "upstream nodejs {
         server 127.0.0.1:8080 max_fails=0;
