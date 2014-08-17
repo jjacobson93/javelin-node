@@ -73,16 +73,6 @@ module.exports = function(grunt) {
 		"./static/js/app/services.js"
 	];
 
-	// Modify css file injection paths to use 
-	// cssFilesToInject = cssFilesToInject.map(function (path) {
-	// 	return '.tmp/public/' + path;
-	// });
-
-	// // Modify js file injection paths to use 
-	// jsFilesToInject = jsFilesToInject.map(function (path) {
-	// 	return '.tmp/public/' + path;
-	// });
-
 	grunt.initConfig({
 		pkg: grunt.file.readJSON('package.json'),
 
