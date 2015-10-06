@@ -510,3 +510,34 @@ app.directive("btnLoading", function(){
 		}
 	}
 });
+
+app.directive('angularjsInit', function() {
+	return {
+		restrict: 'A',
+		link: function($scope, $elem, attrs) {
+			var initData = JSON.parse($elem[0].innerHTML);
+			for (var name in initData) {
+				$scope[name] = initData[name];
+			}
+		}
+	}
+});
+
+app.directive('enterPress', function() {
+	return {
+		restrict: 'A',
+		priority: 1000,
+		link: function($scope, $elem, attrs) {
+			var tag = $elem.prop('tagName');
+			var eventBind = (tag == 'INPUT') ? 'keyup' : 'change';
+
+			$elem.on(eventBind, function(e) {
+				var $submitButton = angular.element('#' + attrs.enterPress);
+				if (((eventBind == 'keyup' && e.keyCode == 13) || eventBind == 'change') && !$submitButton.prop('disabled')) {
+					$submitButton.click();
+				}
+			});
+			
+		}
+	}
+});

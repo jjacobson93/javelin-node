@@ -28,6 +28,8 @@ exports.findSubjects = function(req, res) {
 				}]
 			}
 		];
+
+		query.order = [['tutoring_subjects.title', 'ASC'], ['tutoring_attendances.in_time', 'DESC']];
 	}
 
 	db.tutoring_subject.findAll(query, {
@@ -54,10 +56,12 @@ exports.findSubject = function(req, res) {
 	var end = new Date(parseInt(req.param('end')));
 	var id = req.param('id');
 
+	var query = {
+		where: { id: id }
+	};
 
-	db.tutoring_subject.find({
-		where: { id: id },
-		include: [
+	if (start && end) {
+		query.include = [
 			{
 				model: db.tutoring_attendance,
 				where: db.Sequelize.or(
@@ -77,8 +81,12 @@ exports.findSubject = function(req, res) {
 					attributes: ['id', 'last_name', 'first_name']
 				}]
 			}
-		]
-	}, {
+		];
+
+		query.order = 'tutoring_attendances.in_time DESC'
+	}
+
+	db.tutoring_subject.find(query, {
 		transaction: req.t
 	}).success(function(subject) {
 		res.json(subject);
@@ -90,6 +98,7 @@ exports.findSubject = function(req, res) {
 exports.checkInToSubject = function(req, res) {
 	var subjectId = req.params.id;
 	var personId = req.param('person_id');
+	var creatorId = req.user.id;
 
 	// Check out of any subject (except subjectId), first
 	db.tutoring_attendance.update({
@@ -103,19 +112,23 @@ exports.checkInToSubject = function(req, res) {
 	}).success(function(affectedRows) {
 		// Now let's look at the subject we're checking into
 		db.tutoring_attendance.find({
-			person_id: personId,
-			tutoring_subject_id: subjectId
+			where: {
+				person_id: personId,
+				tutoring_subject_id: subjectId,
+				out_time: null
+			}
 		}, {
 			transaction: req.t
 		}).success(function(tutoring_attendance) {
-			// Already exists
-			if (tutoring_attendance) {
+			// Are we already checked in here?
+			if (tutoring_attendance && !tutoring_attendance.out_time) {
 				res.json(tutoring_attendance);
 			} else {
-				// Create since it doesn't exist
+				// Create since it not checked in
 				db.tutoring_attendance.create({
 					tutoring_subject_id: subjectId,
-					person_id: personId
+					person_id: personId,
+					creator_id: creatorId
 				}, {
 					transaction: req.t
 				}).success(function(attendance) {
@@ -136,12 +149,18 @@ exports.checkOutFromSubject = function(req, res) {
 	var subjectId = req.params.id;
 	var personId = req.param('person_id');
 
+	var where = {
+		person_id: personId,
+		out_time: null // only active
+	};
+
+	if (subjectId > 0) {
+		where.tutoring_subject_id = subjectId;
+	}
+
 	db.tutoring_attendance.update({
 		out_time: new Date()
-	}, {
-		person_id: personId,
-		tutoring_subject_id: subjectId
-	}, {
+	}, where, {
 		transaction: req.t,
 		returning: true
 	}).success(function(attendance) {
@@ -150,6 +169,24 @@ exports.checkOutFromSubject = function(req, res) {
 		res.status(400).json({ message: err });
 	});
 };
+
+exports.notCheckedInToSubject = function(req, res) {
+	var subjectId = req.params.id;
+
+	var where = {
+		
+	}
+
+	db.person.findAll({
+		where: where
+	}, {
+		transaction: req.t
+	}).success(function(people) {
+		res.json(people);
+	}).error(function(err) {
+		res.status(400).json({ message: err });
+	});
+}
 
 // exports.findAll = function(req, res) {
 // 	db.MODELNAME.findAll({}, { transaction: req.t }).success(function(people) {

@@ -14,6 +14,14 @@ app.set('config', config);
 // Config
 require('./config/index')(app);
 
+function startServer() {
+	var server = http.listen(1447, function() {
+		var address = server.address();
+
+		console.log('Listening at %s:%d', address.address, address.port);
+	});
+}
+
 // Set up DB
 db.sequelize.sync().complete(function(err) {
 	if (err) {
@@ -23,11 +31,23 @@ db.sequelize.sync().complete(function(err) {
 			if (!err) {
 				db.sequelize.query(sql.toString()).complete(function(err, result) {
 					if (!err) {
-						var server = http.listen(8080, function() {
-							var address = server.address();
-
-							console.log('Listening at %s:%d', address.address, address.port);
-						});
+						if (process.env.ENV == "DEV") {
+							fs.readFile('./dev.sql', function(err, sql) {
+								if (!err) {
+									db.sequelize.query(sql.toString()).complete(function(err, result) {
+										if (!err) {
+											startServer();
+										} else {
+											throw err;
+										}
+									});
+								} else {
+									throw err;
+								}
+							});
+						} else {
+							startServer();
+						}
 					} else {
 						throw err;
 					}

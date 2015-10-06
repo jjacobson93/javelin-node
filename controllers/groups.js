@@ -2,9 +2,13 @@ var db = require('../models');
 var _ = require('lodash');
 
 exports.findAll = function(req, res) {
-	var query = {};
-	if (req.query.members == "true") {
-		query.include = [ { model: db.person, as: "members" } ];
+	var query = {
+		include: [ { model: db.person, as: "members" } ]
+	};
+
+	// Limit groups to those of which the student is a member
+	if (_.contains(req.user.roles, 'student')) {
+		query.where = { "members.id": req.user.person_id };
 	}
 
 	db.group.findAll(query, {
@@ -18,17 +22,19 @@ exports.findAll = function(req, res) {
 
 exports.findOne = function(req, res) {
 	var query = {
-		where: { id: req.params.id }
+		where: { id: req.params.id },
+		include: [ { model: db.person, as: "members" } ]
 	};
-
-	if (req.query.members == "true") {
-		query.include = [ { model: db.person, as: "members" } ];
-	}
 
 	db.group.find(query, {
 		transaction: req.t
 	}).success(function(group) {
-		res.json(group);
+		var memberIds = _.pluck(group.members, 'id');
+		if (_.contains(req.user.roles, 'student') && !_.contains(memberIds, req.user.person_id)) {
+			res.status(403).end("Forbidden");
+		} else {
+			res.json(group);
+		}
 	}).error(function(err) {
 		res.status(400).json({ message: err });
 	});

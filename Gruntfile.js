@@ -55,6 +55,7 @@ module.exports = function(grunt) {
 		"./static/bower_components/jquery-ui/ui/minified/jquery-ui.custom.min.js",
 		"./static/bower_components/fullcalendar/fullcalendar.js",
 		"./static/bower_components/angular-ui-calendar/src/calendar.js",
+		"./static/js/short.js",
 		"./static/js/app/main.js",
 		"./static/js/app/util.js",
 		"./static/js/app/controllers/main.js",

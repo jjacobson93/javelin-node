@@ -101,6 +101,7 @@ module.exports = function(app) {
 	app.post('/api/tutoring/subjects', requiresLogin, authRolesCheck(['admin']), tutoring.createSubject);
 
 	app.get('/api/tutoring/subjects/:id', requiresLogin, authRolesCheck(['tutor', 'staff', 'admin']), tutoring.findSubject);
+	app.get('/api/tutoring/subjects/:id/not-checkedin', requiresLogin, authRolesCheck(['tutor', 'staff', 'admin']), tutoring.notCheckedInToSubject);
 	app.post('/api/tutoring/subjects/:id', requiresLogin, authRolesCheck(['tutor', 'staff', 'admin']), tutoring.checkInToSubject);
 	app.put('/api/tutoring/subjects/:id', requiresLogin, authRolesCheck(['tutor', 'staff', 'admin']), tutoring.checkOutFromSubject);
 

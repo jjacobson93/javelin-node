@@ -91,8 +91,6 @@ exports.findNonUsers = function(req, res) {
 }
 
 exports.findOne = function(req, res) {
-	var userRoles = _.pluck(req.user.roles, 'name');
-
 	var query = {
 		where: { id: req.params.id },
 		include: [
@@ -110,7 +108,7 @@ exports.findOne = function(req, res) {
 	db.person.find(query, {
 		transaction: req.t
 	}).success(function(person) {
-		if (person && person.last_name == 'Q' && person.first_name == 'Q' && !_.contains(userRoles, 'super')) {
+		if (person && person.last_name == 'Q' && person.first_name == 'Q' && !_.contains(req.user.roles, 'super')) {
 			res.status(401).send("Unauthorized");
 		} else {
 			res.json(person);

@@ -47,6 +47,10 @@ function range(start, end, step) {
     return range;
 }
 
+function pad(n) {
+    return (n < 10) ? ("0" + n) : n;
+}
+
 function notify(status, text) {
     if (status == "error") {
         $('.notification').css('background-color', '#E74C3C');

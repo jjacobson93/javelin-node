@@ -24,7 +24,7 @@ exports.authRolesCheck = function(roles) {
 }
 
 exports.isUser = function(req, res, next) {
-	if (req.param('id') !== req.user.id) {
+	if (_.intersection(req.user.roles, ['super', 'admin', 'staff']).length == 0 && req.param('id') !== req.user.id) {
 		res.status(403);
 		next("Forbidden");
 		return;
@@ -33,7 +33,7 @@ exports.isUser = function(req, res, next) {
 }
 
 exports.isPerson = function(req, res, next) {
-	if (req.param('id') !== req.user.person_id) {
+	if (_.intersection(req.user.roles, ['super', 'admin', 'staff']).length == 0 && req.param('id') != req.user.person_id) {
 		res.status(403);
 		next("Forbidden");
 		return;

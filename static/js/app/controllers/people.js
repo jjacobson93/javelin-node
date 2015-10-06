@@ -15,7 +15,11 @@ app.controller('PeopleController', ['$scope', '$http', '$location', '$state', '$
 				} else {
 					$state.go('people');
 				}
-			}).error(function(data) {
+			}).error(function(data, status) {
+				if (status == 403) {
+					window.location = '/403';
+					return;
+				}
 				$state.go('people');
 				notify("error", (data == "Unauthorized") ? "You don't have permission to view that person. Sorry" : "Could not get data");
 			});
@@ -72,6 +76,20 @@ app.controller('PeopleController', ['$scope', '$http', '$location', '$state', '$
 			getPerson($state.params.id);
 		}
 	});
+
+	if (_.contains($scope.currentUser.roles, 'student')) {
+		$http.get('/api/people/' + $scope.currentUser.person_id).success(function(data) {
+			$scope.currentPerson = data;
+			$state.go('people.detail', { id: $scope.currentPerson.id });
+		}).error(function(data, status) {
+			// $state.go('people');
+			if (status == 403) {
+				window.location = '/403';
+				return;
+			}
+			notify("error", (data == "Unauthorized") ? "You don't have permission to view that person. Sorry" : "Could not get data");
+		});
+	}
 
 	// $scope.loadData = function() {
 	// 	$http.get('/api/people.json').success(function(people) {

@@ -21,6 +21,11 @@ module.exports = function(sequelize, DataTypes) {
 			type: DataTypes.INTEGER,
 			references: "people",
 			referencesKey: "id",
+		},
+		creator_id: {
+			type: DataTypes.INTEGER,
+			references: "people",
+			referencesKey: "id"
 		}
 	}, {
 		classMethods: {

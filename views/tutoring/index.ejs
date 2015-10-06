@@ -1,42 +1,61 @@
 <div javelin-navbar>
 	<button class="btn navbar-btn btn-green pull-right" ng-click="openAddSubjectModal()"><span class="fa fa-plus"></span> Add Subject</button>
-	<h4 class="pull-right">TOTAL NUMBER OF ATTENDEES</h4>
+	<h4 class="pull-right navbar-text" style="margin-right:15px">Attendees: {{ totalCheckedIn() }}</h4>
 	<h4 class="navbar-text">Tutoring</h4>
 </div>
 
 <div class="javelin-main">
 	<h3 ng-if="isLoading"><span class="fa fa-circle-o-notch fa-spin"></span> Loading data...</h3>
-	<div class="panel panel-tabbed fade-inout-downup" ng-if="!isLoading">
-		<h3 ng-if="!subjects || (subjects && subjects.length == 0)">No subjects. Press "Add Subject" to add one.</h3>
+
+	<div class="row">
+		<!-- CHECK OUT ANY -->
+		<div class="col-md-6">
+			<div class="form-group">
+				<label>Check-out</label>
+				<div class="input-group">
+					<input class="form-control" placeholder="Check-out" ng-model="checkOutId" enter-press="check-out">
+					<span class="input-group-btn">
+						<button id="check-out" class="btn btn-purple" ng-disabled="!checkOutId" ng-click="checkOut(-1)">Check-out</button>
+					</span>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="panel panel-tabbed" ng-if="!isLoading">
+
+		<h3 ng-if="!subjects || (subjects && subjects.length == 0)" style="margin: 15px">No subjects. Press "Add Subject" to add one.</h3>
+
 		<tabset ng-if="subjects && subjects.length > 0">
+
 			<tab ng-repeat="subject in subjects" active="subject.activeTab" disabled="subject.disabledTab">
 				<tab-heading>
-					{{subject.title}}&nbsp;&nbsp;<span class="badge" ng-class="{'badge-blue': subject.activeTab}">{{ subject.attendees.length }}</span>
+					{{subject.title}}
+					<span class="badge" ng-class="{'badge-blue': subject.activeTab}">{{ checkedIn(subject.tutoringAttendances) }}</span>
 				</tab-heading>
 				<div class="row">
+
+					<!-- CHECK IN -->
+
 					<div class="col-md-6">
 						<div class="form-group">
 							<label>Check-in</label>
 							<div class="input-group">
-								<input class="form-control" placeholder="Check-in" ng-model="subject.checkInId">
+								<!-- <input class="form-control" placeholder="Check-in" ng-model="subject.checkInId" enter-press="check-in-{{ subject.id }}"> -->
+								<select ui-select2 placeholder="Check-in" ng-model="subject.checkInId" enter-press="check-in-{{ subject.id }}" style="width:100%">
+									<option value="4">4</option>
+								</select>
 								<span class="input-group-btn">
-									<button class="btn btn-teal" ng-disabled="!subject.checkInId" ng-click="checkIn($index)">Check-in</button>
+									<button id="check-in-{{ subject.id }}" class="btn btn-teal" ng-disabled="!subject.checkInId" ng-click="checkIn($index)">Check-in</button>
 								</span>
 							</div>
 						</div>
 					</div>
-					<div class="col-md-6">
-						<div class="form-group">
-							<label>Check-out</label>
-							<div class="input-group">
-								<input class="form-control" placeholder="Check-out" ng-model="subject.checkOutId">
-								<span class="input-group-btn">
-									<button class="btn btn-purple" ng-disabled="!subject.checkOutId" ng-click="checkOut($index)">Check-out</button>
-								</span>
-							</div>
-						</div>
-					</div>
+
 				</div>
+
+				<!-- TABLE -->
+
 				<table class="table table-hover">
 					<thead>
 						<tr>
@@ -48,16 +67,20 @@
 						</tr>
 					</thead>
 					<tbody>
+						<tr ng-if="!subject.tutoringAttendances || !subject.tutoringAttendances.length">
+							<td colspan="5" style="text-align:center"><b>No Attendees</b></td>
+						</tr>
 						<tr ng-repeat="attendance in subject.tutoringAttendances">
 							<td>{{ attendance.attendee.last_name }}</td>
 							<td>{{ attendance.attendee.first_name }}</td>
 							<td>{{ (attendance.in_time | moment:'LT') || '---' }}</td>
 							<td>{{ (attendance.out_time | moment:'LT') || '---' }}</td>
-							<td>{{ (attendance.out_time - attendance.in_time) || '---' }}</td>
+							<td>{{ attendance.out_time && timeDiff(attendance.in_time, attendance.out_time) || '---' }}</td>
 						</tr>
 					</tbody>
 				</table>
 			</tab>
 		</tabset>
+
 	</div>
 </div>
